@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="insertDevice">
+		INSERT INTO DEVICE(DEV_NO, CATEGORY, DEV_NAME, PRICE,
+		ARRIVAL_DATE)
+		VALUES(
+		SEQ_DEVNO.NEXTVAL,
+		?,
+		?,
+		?,
+		SYSDATE
+		)
+	</entry>
+	<entry key="selectDeviceList">
+		SELECT * FROM DEVICE
+	</entry>
+	<entry key="updateDevice">
+		UPDATE DEVICE
+		SET PRICE=?
+		WHERE DEV_NO=?
+	</entry>
+	<entry key="deleteDevice">
+		DELETE FROM DEVICE
+		WHERE DEV_NO=?
+	</entry>
+	<entry key="searchDeviceByName">
+		SELECT *
+		FROM DEVICE
+		WHERE DEV_NAME LIKE '%' || ? || '%'
+		ORDER BY DEV_NO
+	</entry>
+</properties>

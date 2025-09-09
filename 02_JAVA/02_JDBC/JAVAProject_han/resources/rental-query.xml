@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="insertRental">
+		INSERT INTO RENTAL(REN_NO, DEV_NO, CUST_NO, REN_DATE, STATUS)
+		VALUES(
+		SEQ_RENNO.NEXTVAL,
+		?, <!-- 첫 번째 ?는 DEV_NO입니다. -->
+		?, <!-- 두 번째 ?는 CUST_NO입니다. -->
+		SYSDATE,
+		'대여중'
+		)
+	</entry>
+	<entry key="updateRentalToReturned">
+		UPDATE RENTAL
+		SET STATUS = '반납완료'
+		WHERE CUST_NO = ?
+		AND
+		DEV_NO = ?
+		AND STATUS = '대여중'
+	</entry>
+	<entry key="checkRentalStatus">
+		SELECT COUNT(*)
+		FROM RENTAL
+		WHERE DEV_NO = ?
+		AND STATUS =
+		'대여중'
+	</entry>
+	<entry key="selectRentedDevices">
+		SELECT
+		D.DEV_NO,
+		D.CATEGORY,
+		D.DEV_NAME,
+		D.PRICE,
+		D.ARRIVAL_DATE
+		FROM RENTAL R
+		JOIN DEVICE D ON D.DEV_NO = R.DEV_NO
+		WHERE R.CUST_NO = ?
+		AND R.STATUS = '대여중'
+	</entry>
+</properties>

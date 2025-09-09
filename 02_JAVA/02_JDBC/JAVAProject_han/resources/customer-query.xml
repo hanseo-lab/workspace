@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="selectAllCustomers">
+		SELECT CUST_NO, CUST_ID, CUST_PW, CUST_NAME,
+		CUST_PHONE, CUST_ADDRESS, CUST_JOINDATE, ROLE FROM CUSTOMER ORDER BY
+		CUST_NO
+	</entry>
+	<entry key="insertCustomers">
+		INSERT INTO CUSTOMER(CUST_NO, CUST_ID, CUST_PW,
+		CUST_NAME, CUST_PHONE, CUST_ADDRESS, CUST_JOINDATE)
+		VALUES(
+		SEQ_CUSTNO.NEXTVAL,
+		?,
+		?,
+		?,
+		?,
+		?,
+		SYSDATE
+		)
+	</entry>
+	<entry key="loginCustomers">
+		SELECT CUST_NO, CUST_ID, CUST_PW, CUST_NAME, CUST_PHONE, CUST_ADDRESS,
+		CUST_JOINDATE, ROLE
+		FROM CUSTOMER
+		WHERE CUST_ID = ?
+		AND CUST_PW = ?
+	</entry>
+</properties>
