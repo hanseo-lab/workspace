@@ -21,6 +21,44 @@
     <script>
         const exId = 'user01';
 
+        document.getElementById('id').addEventListener('input', function () {
+            const userId = this.value;
+            const idMessage = document.getElementById('id-message');
+
+            if (userId === '') {
+                idMessage.textContent = '';
+                return;
+            }
+
+            if (userId === existingId) {
+                idMessage.textContent = '이미 존재하는 아이디입니다.';
+                idMessage.className = 'red';
+            } else {
+                idMessage.textContent = '사용 가능한 아이디입니다.';
+                idMessage.className = 'green';
+            }
+        });
+
+        // 비밀번호 확인 필드에 'blur' 이벤트 리스너 추가 (포커스 벗어날 때 체크)
+        document.getElementById('pwd2').addEventListener('blur', function () {
+            const pwd1 = document.getElementById('pwd1').value;
+            const pwd2 = this.value;
+            const pwdMessage = document.getElementById('pwd-message');
+
+            if (pwd2 === '') {
+                pwdMessage.textContent = '';
+                return;
+            }
+
+            if (pwd1 === pwd2) {
+                pwdMessage.textContent = '비밀번호가 일치합니다.';
+                pwdMessage.className = 'green';
+            } else {
+                pwdMessage.textContent = '비밀번호가 일치하지 않습니다.';
+                pwdMessage.className = 'red';
+            }
+        });
+
         function signup() {
             const idInput = document.getElementById('id');
             const idMessage = document.getElementById('id-message');
@@ -57,27 +95,17 @@
             }
 
             if (id === exId) {
-                idMessage.textContent = '이미 존재하는 아이디입니다.';
-                idMessage.style.color = 'red';
                 alert('사용할 수 없는 아이디입니다');
                 idInput.value = '';
                 idInput.foucs();
                 return;
-            }else{
-                idMessage.textContent = '사용 가능한 아이디입니다.';
-                idMessage.style.color = 'green';
             }
 
             if (pwd1 !== pwd2) {
-                pwdMessage.textContent = '비밀번호가 일치하지 않습니다';
-                pwdMessage.style.color = 'red';
                 alert('비밀번호가 일치하지 않습니다');
                 pwd2Input.value = '';
                 pwd2Input.foucs();
                 return;
-            }else{
-                pwdMessage.textContent = '비밀번호가 일치합니다.';
-                pwdMessage.style.color = 'green';
             }
 
             alert(`${name}님, 회원가입이 성공적으로 완료되었습니다.^^`);
@@ -88,4 +116,5 @@
         }
     </script>
 </body>
+
 </html>
