@@ -23,9 +23,12 @@
 
         function signup() {
             const idInput = document.getElementById('id');
+            const idMessage = document.getElementById('id-message');
             const pwd1Input = document.getElementById('pwd1');
             const pwd2Input = document.getElementById('pwd2');
+            const pwdMessage = document.getElementById('pwd-message');
             const nameInput = document.getElementById('name');
+
 
             const id = idInput.value;
             const pwd1 = pwd1Input.value;
@@ -54,17 +57,27 @@
             }
 
             if (id === exId) {
+                idMessage.textContent = '이미 존재하는 아이디입니다.';
+                idMessage.style.color = 'red';
                 alert('사용할 수 없는 아이디입니다');
                 idInput.value = '';
                 idInput.foucs();
                 return;
+            }else{
+                idMessage.textContent = '사용 가능한 아이디입니다.';
+                idMessage.style.color = 'green';
             }
 
             if (pwd1 !== pwd2) {
+                pwdMessage.textContent = '비밀번호가 일치하지 않습니다';
+                pwdMessage.style.color = 'red';
                 alert('비밀번호가 일치하지 않습니다');
                 pwd2Input.value = '';
                 pwd2Input.foucs();
                 return;
+            }else{
+                pwdMessage.textContent = '비밀번호가 일치합니다.';
+                pwdMessage.style.color = 'green';
             }
 
             alert(`${name}님, 회원가입이 성공적으로 완료되었습니다.^^`);
