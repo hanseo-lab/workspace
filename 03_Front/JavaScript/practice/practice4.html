@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="">
+        <fieldset>
+            <legend>회원가입</legend>
+            아이디 : <input type="text" id="id">
+            <span id="id-message"></span><br><br>
+            비밀번호 : <input type="password" id="pwd1"><br><br>
+            비밀번호 확인 : <input type="password" id="pwd2">
+            <span id="pwd-message"></span><br><br>
+            이름 : <input type="text" id="name"><br><br>
+            <button type="button" onclick="signup()">회원가입</button>
+        </fieldset>
+    </form>
+    <script>
+        const exId = 'user01';
+
+        function signup() {
+            const idInput = document.getElementById('id');
+            const pwd1Input = document.getElementById('pwd1');
+            const pwd2Input = document.getElementById('pwd2');
+            const nameInput = document.getElementById('name');
+
+            const id = idInput.value;
+            const pwd1 = pwd1Input.value;
+            const pwd2 = pwd2Input.value;
+            const name = nameInput.value;
+
+            if (id === '') {
+                alert('아아디를 입력해주세요');
+                idInput.foucs();
+                return;
+            }
+            if (pwd1 === '') {
+                alert('비밀번호를 입력해주세요');
+                pwd1Input.foucs();
+                return;
+            }
+            if (pwd2 === '') {
+                alert('비밀번호 확인을 입력해주세요');
+                pwd2Input.foucs();
+                return;
+            }
+            if (name === '') {
+                alert('이름을 입력해주세요');
+                nameInput.foucs();
+                return;
+            }
+
+            if (id === exId) {
+                alert('사용할 수 없는 아이디입니다');
+                idInput.value = '';
+                idInput.foucs();
+                return;
+            }
+
+            if (pwd1 !== pwd2) {
+                alert('비밀번호가 일치하지 않습니다');
+                pwd2Input.value = '';
+                pwd2Input.foucs();
+                return;
+            }
+
+            alert(`${name}님, 회원가입이 성공적으로 완료되었습니다.^^`);
+            idInput.value = '';
+            pwd1Input.value = '';
+            pwd2Input.value = '';
+            nameInput.value = '';
+        }
+    </script>
+</body>
+</html>
