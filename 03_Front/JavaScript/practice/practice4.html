@@ -4,117 +4,101 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        .join-form{
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .none-pass{color: red;}
+        .pass{color: green;}
+    </style>
 </head>
 <body>
+    <h1>Practice4</h1>
     <form action="">
         <fieldset>
             <legend>회원가입</legend>
-            아이디 : <input type="text" id="id">
-            <span id="id-message"></span><br><br>
-            비밀번호 : <input type="password" id="pwd1"><br><br>
-            비밀번호 확인 : <input type="password" id="pwd2">
-            <span id="pwd-message"></span><br><br>
-            이름 : <input type="text" id="name"><br><br>
-            <button type="button" onclick="signup()">회원가입</button>
+            <div class="join-form">
+                <div>
+                    아이디 : <input id="id-input" type="text" data-name="아이디" onkeydown="checkId(this)" >
+                    <span id="id-review"></span>
+                </div>
+                <div>비밀번호 : <input type="password" data-name="비밀번호"></div>
+                <div>
+                    비밀번호 확인 : <input id="pwd-check-input" type="password" data-name="비밀번호 확인" onblur="checkPwd()">
+                    <span id="pwd-review"></span>
+                </div>
+                <div>이름 : <input type="text" data-name="이름"></div>
+                <div><button onclick="return validate();">회원가입</button></div>
+            </div>
         </fieldset>
     </form>
+
+    
     <script>
-        const exId = 'user01';
+        function validate(){
+            //전체 input입력여부 체크
+            const inputList = document.querySelectorAll('.join-form input');
 
-        document.getElementById('id').addEventListener('input', function () {
-            const userId = this.value;
-            const idMessage = document.getElementById('id-message');
-
-            if (userId === '') {
-                idMessage.textContent = '';
-                return;
+            for(let i=0; i<inputList.length; i++){
+                if(inputList[i].value.trim() === ""){
+                    alert(inputList[i].dataset.name + "은 필수입니다.");
+                    inputList[i].focus();
+                    return false; 
+                }
             }
 
-            if (userId === existingId) {
-                idMessage.textContent = '이미 존재하는 아이디입니다.';
-                idMessage.className = 'red';
+            if(!checkPwd()){
+                alert('비밀번호가 일치하지 않습니다.');
+                let pwdCheckInput = document.getElementById('pwd-check-input');
+                pwdCheckInput.value = "";
+                pwdCheckInput.focus();
+                return false; 
+            }
+            
+            const idInput = document.getElementById('id-input');
+            if(idInput.value.trim() === 'user01'){
+                alert('사용할 수 없는 ID입니다.');
+                idInput.value = "";
+                idInput.focus();
+                return false; 
+            }
+
+        }
+
+        /**
+         * 라이브러리에서는 keydown이벤트를 더 많이 사용함.
+         * - 모바일에서 OS에 따라 키보드 이벤트와 충돌할 수 있기 때문에.
+         */
+        function checkPwd(){
+            const pwdInputList = document.querySelectorAll('input[type="password"]');
+            const pwdReview = document.getElementById('pwd-review'); 
+
+            if(pwdInputList[0].value === pwdInputList[1].value){
+                pwdReview.innerText = "비밀번호가 일치합니다.";
+                pwdReview.className = 'pass';
+                return true;
             } else {
-                idMessage.textContent = '사용 가능한 아이디입니다.';
-                idMessage.className = 'green';
+                pwdReview.innerText = "비밀번호가 일치하지 않습니다";
+                pwdReview.className = 'none-pass';
+                return false;
             }
-        });
+        }
 
-        // 비밀번호 확인 필드에 'blur' 이벤트 리스너 추가 (포커스 벗어날 때 체크)
-        document.getElementById('pwd2').addEventListener('blur', function () {
-            const pwd1 = document.getElementById('pwd1').value;
-            const pwd2 = this.value;
-            const pwdMessage = document.getElementById('pwd-message');
-
-            if (pwd2 === '') {
-                pwdMessage.textContent = '';
-                return;
-            }
-
-            if (pwd1 === pwd2) {
-                pwdMessage.textContent = '비밀번호가 일치합니다.';
-                pwdMessage.className = 'green';
-            } else {
-                pwdMessage.textContent = '비밀번호가 일치하지 않습니다.';
-                pwdMessage.className = 'red';
-            }
-        });
-
-        function signup() {
-            const idInput = document.getElementById('id');
-            const idMessage = document.getElementById('id-message');
-            const pwd1Input = document.getElementById('pwd1');
-            const pwd2Input = document.getElementById('pwd2');
-            const pwdMessage = document.getElementById('pwd-message');
-            const nameInput = document.getElementById('name');
-
-
-            const id = idInput.value;
-            const pwd1 = pwd1Input.value;
-            const pwd2 = pwd2Input.value;
-            const name = nameInput.value;
-
-            if (id === '') {
-                alert('아아디를 입력해주세요');
-                idInput.foucs();
-                return;
-            }
-            if (pwd1 === '') {
-                alert('비밀번호를 입력해주세요');
-                pwd1Input.foucs();
-                return;
-            }
-            if (pwd2 === '') {
-                alert('비밀번호 확인을 입력해주세요');
-                pwd2Input.foucs();
-                return;
-            }
-            if (name === '') {
-                alert('이름을 입력해주세요');
-                nameInput.foucs();
-                return;
-            }
-
-            if (id === exId) {
-                alert('사용할 수 없는 아이디입니다');
-                idInput.value = '';
-                idInput.foucs();
-                return;
-            }
-
-            if (pwd1 !== pwd2) {
-                alert('비밀번호가 일치하지 않습니다');
-                pwd2Input.value = '';
-                pwd2Input.foucs();
-                return;
-            }
-
-            alert(`${name}님, 회원가입이 성공적으로 완료되었습니다.^^`);
-            idInput.value = '';
-            pwd1Input.value = '';
-            pwd2Input.value = '';
-            nameInput.value = '';
+        function checkId(_this, callback){
+            setTimeout(function(){
+                console.log(_this.value);
+                const idReview = document.getElementById('id-review');
+                if(_this.value === 'user01'){
+                    idReview.innerText = "이미 존재하는 아이디입니다.";
+                    idReview.className = 'none-pass';
+                } else {
+                    idReview.innerText = "사용 가능한 아이디입니다.";
+                    idReview.className = 'pass';
+                }
+            },0);
         }
     </script>
 </body>
-
 </html>
