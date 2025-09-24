@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>가계부</title>
+
+    <!-- 외부라이브러리 -->
+    <!-- google web font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- 내부import -->
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더영역 -->
+        <header>
+            <h1>가계부</h1>
+            <div class="balance-container">
+                <p>현재 잔액</p>
+                <div id="current-balance" class="balance-amount">0원</div>
+            </div>
+        </header>
+
+        <!-- 입력영역 -->
+        <div class="input-section">
+            <div class="input-row">
+                <input type="text" id="description-input" placeholder="내용을 입력하세요 (예: 점심값, 월급)">
+                <input type="number" id="amount-input" placeholder="금액을 입력하세요">
+            </div>
+            <div class="type-selection-buttons">
+                <button id="income-btn" class="active">수입</button>
+                <button id="expense-btn">지출</button>
+            </div>
+            <button id="add-btn">추가하기</button>
+        </div>
+
+        <!-- 필터영역 -->
+        <div class="filter-section">
+            <button data-filter="all" class="active">전체</button>
+            <button data-filter="income">수입</button>
+            <button data-filter="expense">지출</button>
+        </div>
+
+        <!-- 요약영역 -->
+        <div class="summary-section">
+            <div class="summary-box">
+                <p>총 수입</p>
+                <div id="total-income" class="amount-display income">0원</div>
+            </div>
+            <div class="summary-box">
+                <p>총 지출</p>
+                <div id="total-expense" class="amount-display expense">0원</div>
+            </div>
+            <div class="summary-box">
+                <p>잔액</p>
+                <div id="summary-balance" class="amount-display">0원</div>
+            </div>
+        </div>
+
+        <!-- 목록영역 -->
+        <ul id="transaction-list"></ul>
+    </div>
+
+    <script src="./script.js"></script>
+</body>
+</html>
