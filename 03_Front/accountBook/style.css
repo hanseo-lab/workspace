@@ -7,56 +7,56 @@
 
 /* body 태그에 대한 스타일 설정 */
 body {
-    min-height: 100vh; /* 뷰포트 높이의 100%를 최소 높이로 설정 */
-    font-family: "Noto Sans KR", sans-serif; /* 글꼴 지정 */
+    min-height: 100vh; 
+    font-family: "Noto Sans KR", sans-serif; 
     font-optical-sizing: auto;
     font-style: normal;
-    font-weight: 400; /* 글꼴 굵기 설정 */
-    background: linear-gradient(135deg, #6a11cb, #2575fc); /* 배경색을 그라데이션으로 지정 */
+    font-weight: 400; 
+    background: linear-gradient(135deg, #6a11cb, #2575fc); 
     padding: 20px;
-    display: flex; /* Flexbox 레이아웃 사용 */
-    justify-content: center; /* 가로 방향 중앙 정렬 */
-    align-items: center; /* 세로 방향 중앙 정렬 */
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
     color: black;
 }
 
 /* 모든 button 태그에 대한 기본 스타일 설정 */
 button {
-    border: none; /* 테두리 제거 */
-    outline: none; /* 포커스 시 외곽선 제거 */
-    cursor: pointer; /* 마우스 오버 시 포인터 모양 변경 */
+    border: none; 
+    outline: none; 
+    cursor: pointer; 
 }
 
 /* 가계부 전체를 감싸는 컨테이너 */
 .container {
-    background-color: white; /* 배경색 흰색 */
+    background-color: white; 
     width: 100%;
-    max-width: 700px; /* 최대 너비 700px */
-    border-radius: 15px; /* 모서리를 둥글게 처리 */
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); /* 부드러운 그림자 효과 */
-    padding: 30px; /* 내부 여백 설정 */
+    max-width: 700px; 
+    border-radius: 15px; 
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); 
+    padding: 30px; 
 }
 
 /* 헤더 영역 */
 header {
-    text-align: center; /* 텍스트 중앙 정렬 */
+    text-align: center;
     padding-bottom: 20px;
-    border-bottom: 1px solid #eee; /* 하단에 얇은 경계선 추가 */
+    border-bottom: 1px solid #eee; 
 }
 
 header h1 {
-    font-weight: 700; /* 글꼴 굵기 설정 */
+    font-weight: 700; 
     font-size: 2em; /* em 부모요소의 2배 크기 글자 설정 */
     margin-bottom: 10px;
 }
 
 /* 현재 잔액을 표시하는 컨테이너 */
 .balance-container {
-    background: linear-gradient(135deg, #6a11cb, #2575fc); /* 보라색 그라데이션 배경 */
-    color: white; /* 글자색 흰색 */
+    background: linear-gradient(135deg, #6a11cb, #2575fc); 
+    color: white;
     padding: 25px;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 효과 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
     margin-top: 20px;
 }
 
@@ -73,7 +73,7 @@ header h1 {
 
 /* 입력 섹션 */
 .input-section {
-    display: flex; /* Flexbox 레이아웃 사용 */
+    display: flex;
     flex-direction: column; /* 아이템들을 세로로 정렬 */
     gap: 15px; /* 아이템 간의 간격 설정 */
     margin: 25px 0;
@@ -81,29 +81,28 @@ header h1 {
 
 /* 내용과 금액 입력창을 감싸는 컨테이너 */
 .input-row {
-    display: flex; /* Flexbox 레이아웃 사용 */
+    display: flex; 
     gap: 15px;
 }
 
 /* 모든 input 태그에 대한 스타일 설정 */
 .input-section input {
-    flex: 1 1 50%; /* 컨테이너 너비의 50%씩 차지하도록 설정 */
+    flex: 1 1 50%; 
     padding: 12px;
-    border: 1px solid #ddd; /* 연한 회색 테두리 */
+    border: 1px solid #ddd; 
     border-radius: 8px;
     font-size: 1em;
-    transition: border-color 0.3s; /* 색상 변화 애니메이션 */
+    transition: border-color 0.3s ease;
 }
 
 /* input의 placeholder(안내 텍스트) 스타일 */
 .input-section input::placeholder {
-    color: #aaa; /* 연한 회색 글자색 */
+    color: #aaa; 
 }
 
-/* input에 포커스 되었을 때의 스타일 */
 .input-section input:focus {
-    border-color: #6a11cb; /* 테두리색을 보라색으로 변경 */
-    outline: none; /* 기본 포커스 외곽선 제거 */
+    border-color: #6a11cb;
+    outline: none;
 }
 
 /* 수입/지출 버튼 그룹 */
@@ -113,23 +112,21 @@ header h1 {
 }
 
 .type-selection-buttons button {
-    flex: 1; /* 컨테이너 내에서 균등한 너비로 확장 */
+    flex: 1; 
     padding: 12px;
     border-radius: 8px;
     font-weight: 700;
     font-size: 1em;
     background-color: white;
     color: gray;
-    transition: background-color 0.3s, color 0.3s;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* 수입 버튼이 활성화되었을 때의 스타일 */
 #income-btn.active {
     background-color: green;
     color: white;
 }
 
-/* 지출 버튼이 활성화되었을 때의 스타일 */
 #expense-btn.active {
     background-color: red;
     color: white;
@@ -137,20 +134,19 @@ header h1 {
 
 /* 추가하기 버튼 */
 #add-btn {
-    width: 100%; /* 너비를 100%로 설정하여 부모 요소에 맞춤 */
-    background: linear-gradient(135deg, #6a11cb, #2575fc); /* 그라데이션 배경 */
+    width: 100%;
+    background: linear-gradient(135deg, #6a11cb, #2575fc); 
     color: white;
     padding: 15px;
     border-radius: 8px;
     font-size: 1.2em;
     font-weight: 700;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 효과 */
-    transition: transform 0.2s; /* 클릭 시 애니메이션 효과 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    transition: transform 0.3s ease; 
 }
 
-/* 버튼을 눌렀을 때의 애니메이션 */
 #add-btn:active {
-    transform: translateY(2px); /* Y축으로 2px 아래로 이동 */
+    transform: translateY(2px); 
 }
 
 /* 요약 섹션 (총 수입, 지출, 잔액) */
@@ -185,12 +181,10 @@ header h1 {
     margin-top: 5px;
 }
 
-/* 총 수입 금액은 항상 초록색 */
 #total-income {
     color: green;
 }
 
-/* 총 지출 금액은 항상 빨간색 */
 #total-expense {
     color: red;
 }
@@ -215,21 +209,20 @@ header h1 {
 .filter-section button {
     padding: 8px 15px;
     background-color: #f7f7f7;
-    border-radius: 20px; /* 매우 둥근 모서리 */
+    border-radius: 20px; 
     font-size: 0.9em;
     font-weight: 700;
     color: #666;
-    transition: background-color 0.3s, color 0.3s;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* 필터 버튼이 활성화되었을 때의 스타일 */
 .filter-section button.active {
     background-color: #6a11cb;
     color: white;
 }
 
 /* 거래 목록 섹션 */
-#transaction-list {
+#category-list {
     list-style: none; /* 리스트 앞의 점 제거 */
     padding: 0;
     display: flex;
@@ -238,7 +231,7 @@ header h1 {
 }
 
 /* 각 거래 목록 아이템 */
-.transaction-item {
+.category-item {
     display: flex;
     justify-content: space-between; /* 아이템들을 양쪽 끝으로 배치 */
     align-items: center;
@@ -246,13 +239,25 @@ header h1 {
     background-color: #f9f9f9;
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* 아이템에 마우스를 올렸을 때의 효과 */
-.transaction-item:hover {
-    transform: translateY(-3px); /* 위로 살짝 올라가는 효과 */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자를 더 진하게 */
+.category-item:hover {
+    transform: translateY(-3px); 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 거래 내역이 없을 때의 스타일 */
+.category-item.empty-state {
+     /* !important를 사용하여 다른 .category-item 스타일보다 우선 적용 */
+    background-color: white !important;
+    box-shadow: none !important;
+    transform: none !important;
+    justify-content: center;
+    color: #999;
+    font-weight: 400;
+    padding: 20px;
+    cursor: default; 
 }
 
 /* 거래 상세 정보 */
@@ -283,25 +288,22 @@ header h1 {
     font-size: 1.1em;
 }
 
-/* 수입 금액 글자색 */
 .item-amount.income { color: green; }
-/* 지출 금액 글자색 */
 .item-amount.expense { color: red; }
 
 /* 삭제 버튼 */
 .delete-btn {
     background-color: red;
     color: white;
-    padding: 5px 10px; /* 직사각형 모양 패딩 */
-    border-radius: 5px; /* 둥근 모서리 */
+    padding: 5px 10px; 
+    border-radius: 5px;
     font-size: 0.8em;
-    transition: opacity 0.2s;
-    opacity: 0.8; /* 약간 투명하게 */
+    transition: opacity 0.3s ease;
+    opacity: 0.8;
 }
 
-/* 삭제 버튼에 마우스를 올렸을 때의 효과 */
 .delete-btn:hover {
-    opacity: 1; /* 투명도 제거 */
+    opacity: 1; 
 }
 
 /* 모바일 화면에 대한 반응형 디자인 */
