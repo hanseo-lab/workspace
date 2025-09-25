@@ -34,23 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('transactions', JSON.stringify(transactions));
     }
 
-    // === 이벤트 리스너 설정 ===
-
-    // '수입'/'지출' 버튼 활성화 상태 변경
-    incomeBtn.addEventListener('click', () => {
-        transactionType = 'income';
-        incomeBtn.classList.add('active');
-        expenseBtn.classList.remove('active');
-    });
-
-    expenseBtn.addEventListener('click', () => {
-        transactionType = 'expense';
-        expenseBtn.classList.add('active');
-        incomeBtn.classList.remove('active');
-    });
-
-    // '추가하기' 버튼 클릭 시
-    addBtn.addEventListener('click', () => {
+    // 새로운 거래 추가
+    function addTransaction() {
         const description = descriptionInput.value.trim();
         const amount = parseFloat(amountInput.value);
 
@@ -62,45 +47,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 새로운 거래 내역 객체 생성
         const newTransaction = {
-            id: Date.now(),
+            id: Date.now(), // 현재 시간을 ms 단위로 변환 -> 고유한 ID로 사용
             description,
             amount,
             type: transactionType,
             date: new Date()
         };
 
-        transactions.push(newTransaction);
+        transactions.push(newTransaction); // 새로운 거래를 목록에 추가
         saveTransactionsToLocalStorage(); // 변경사항 저장
-
         descriptionInput.value = '';
         amountInput.value = '';
 
         updateUI(); // 모든 UI 업데이트
-    });
-
-    // 필터 버튼 클릭 시
-    filterButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            filterButtons.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-            renderTransactions(); // 목록만 다시 그리기
-        });
-    });
-
-    // === 핵심 로직 함수 ===
+    }
 
     // 거래 내역 삭제
     function deleteTransaction(id) {
         // filter() 메서드를 사용하여 특정 ID를 가진 항목을 배열에서 제거
         transactions = transactions.filter(t => t.id !== id);
         saveTransactionsToLocalStorage(); // 변경사항 저장
-
         updateUI(); // 모든 UI 업데이트
     }
 
-    // 모든 UI를 업데이트하는 통합 함수
+    // 모든 UI 업데이트 (요약 및 목록)
     function updateUI() {
-        // 1. 요약 정보 업데이트 (전체 내역 기준)
+        renderSummary();
+        renderTransactions();
+    }
+
+    // 요약 정보 렌더링
+    function renderSummary() {
         let totalIncome = 0;
         let totalExpense = 0;
         transactions.forEach(transaction => {
@@ -110,8 +87,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 totalExpense += transaction.amount;
             }
         });
-        const totalBalance = totalIncome - totalExpense;
 
+        const totalBalance = totalIncome - totalExpense;
         currentBalanceEl.textContent = `${totalBalance.toLocaleString()}원`;
         summaryBalanceEl.textContent = `${totalBalance.toLocaleString()}원`;
 
@@ -130,9 +107,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         totalIncomeEl.textContent = `${totalIncome.toLocaleString()}원`;
         totalExpenseEl.textContent = `${totalExpense.toLocaleString()}원`;
-
-        // 2. 목록 렌더링
-        renderTransactions();
     }
 
     // 필터링된 거래 목록만 화면에 그리는 함수
@@ -144,39 +118,91 @@ document.addEventListener('DOMContentLoaded', () => {
             .filter(t => activeFilter === 'all' || t.type === activeFilter)
             .sort((a, b) => b.date - a.date); // 최신 내역이 위로 오도록 정렬
 
-        transactionList.innerHTML = ''; // 기존 목록 비우기
+        transactionList.innerHTML = ''; // 기존 UI 제거
 
-        // 목록 생성
-        filteredTransactions.forEach(transaction => {
-            const itemEl = document.createElement('li');
-            itemEl.classList.add('transaction-item');
-
-            const amountSign = transaction.type === 'income' ? '+' : '-';
-            const amountFormatted = `${amountSign}${transaction.amount.toLocaleString()}원`;
-            const dateFormatted = `${transaction.date.getFullYear()}년 ${transaction.date.getMonth() + 1}월 ${transaction.date.getDate()}일`;
-
-            itemEl.innerHTML = `
-                <div class="item-details">
-                    <span class="item-date">${dateFormatted}</span>
-                    <span class="item-description">${transaction.description}</span>
-                </div>
-                <div class="item-amount-wrapper">
-                    <span class="item-amount ${transaction.type}">${amountFormatted}</span>
-                    <button class="delete-btn" data-id="${transaction.id}">삭제</button>
-                </div>
-            `;
-
-            transactionList.appendChild(itemEl);
-        });
-
-        // 삭제 버튼 이벤트 위임 (효율적인 방법)
-        transactionList.onclick = (e) => {
-            if (e.target.classList.contains('delete-btn')) {
-                const id = parseInt(e.target.dataset.id);
-                deleteTransaction(id);
-            }
-        };
+        if (filteredTransactions.length === 0) {
+            renderEmptyState();
+        } else {
+            // 할일 목록이 있는 경우, 각 항목을 렌더링
+            filteredTransactions.forEach(transaction => {
+                renderTransactionItem(transaction);
+            });
+        }
     }
+
+    // '거래 내역 없음' 상태를 렌더링하는 함수
+    function renderEmptyState() {
+        const emptyEl = document.createElement('div');
+        emptyEl.className = 'empty-state';
+        emptyEl.innerHTML = '내역이 없습니다.';
+        transactionList.appendChild(emptyEl);
+    }
+
+    // 개별 거래 아이템을 렌더링하는 함수 (컴포넌트 역할)
+    function renderTransactionItem(transaction) {
+        const itemEl = document.createElement('li');
+        itemEl.classList.add('transaction-item');
+
+        const amountSign = transaction.type === 'income' ? '+' : '-';
+        const amountFormatted = `${amountSign}${transaction.amount.toLocaleString()}원`;
+        const dateFormatted = `${transaction.date.getFullYear()}년 ${transaction.date.getMonth() + 1}월 ${transaction.date.getDate()}일`;
+
+        itemEl.innerHTML = `
+            <div class="item-details">
+                <span class="item-date">${dateFormatted}</span>
+                <span class="item-description">${transaction.description}</span>
+            </div>
+            <div class="item-amount-wrapper">
+                <span class="item-amount ${transaction.type}">${amountFormatted}</span>
+                <button class="delete-btn" data-id="${transaction.id}">삭제</button>
+            </div>
+        `;
+
+        transactionList.appendChild(itemEl);
+    }
+
+    // 필터 설정
+    function setFilter(filter) {
+        filterButtons.forEach(btn => {
+            btn.classList.remove('active'); // 모든 버튼에서 active 클래스 제거
+            if (btn.dataset.filter === filter) {
+                btn.classList.add('active'); // 선택된 버튼에만 active 클래스 추가
+            }
+        });
+        renderTransactions();
+    }
+
+    // === 이벤트 리스너 등록 ===
+    // '수입'/'지출' 버튼
+    incomeBtn.addEventListener('click', () => {
+        transactionType = 'income';
+        incomeBtn.classList.add('active');
+        expenseBtn.classList.remove('active');
+    });
+
+    expenseBtn.addEventListener('click', () => {
+        transactionType = 'expense';
+        expenseBtn.classList.add('active');
+        incomeBtn.classList.remove('active');
+    });
+
+    // '추가하기' 버튼
+    addBtn.addEventListener('click', addTransaction);
+
+    // 필터 버튼
+    filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            setFilter(button.dataset.filter);
+        });
+    });
+
+    // 거래 목록에 대한 이벤트 위임
+    transactionList.addEventListener('click', (e) => {
+        if (e.target.classList.contains('delete-btn')) {
+            const id = parseInt(e.target.dataset.id);
+            deleteTransaction(id);
+        }
+    });
 
     // 앱 시작 시 초기화
     loadTransactionsFromLocalStorage();
