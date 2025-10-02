@@ -89,7 +89,7 @@
             <h2>일반게시판</h2>
 
             <div class="write-btn-area">
-                <a class="btn btn-primary" href="">글쓰기</a>
+                <a class="btn btn-primary" href="${pageContext.request.contextPath}/insert.bo">글쓰기</a>
             </div>
 
             <table class="board-table">
@@ -104,22 +104,25 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>운동</td>
-                        <td>안녕하세요.</td>
-                        <td>user01</td>
-                        <td>123</td>
-                        <td>2025-03-12</td>
+                	<c:choose>
+                		<c:when test = "${not empty list}">
+                			<c:forEach var="b" items="${list}">
+                    <tr onclick="${pageContext.request.contextPath}/detail.bo">
+                        <td>${b.boardNo}</td>
+                        <td>${b.categoryName}</td>
+                        <td>${b.boardTitle}</td>
+                        <td>${b.boardWriter}</td>
+                        <td>${b.count}</td>
+                        <td>${b.createDate}</td>
                     </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>기타</td>
-                        <td>문의 남깁니다.</td>
-                        <td>user02</td>
-                        <td>13</td>
-                        <td>2025-01-08</td>
-                    </tr>
+                    </c:forEach>
+                    </c:when>
+                    <c:otherwise>
+                    	<tr>
+                    		<td colspan="6">조회된 게시글이 없습니다.</td>
+                    	</tr>
+                    </c:otherwise>
+                    </c:choose>
                 </tbody>
             </table>
 

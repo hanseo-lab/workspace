@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="insertBoard">
+		INSERT INTO BOARD
+		(
+			BOARD_NO
+			BOARD_TYPE
+			CATEGORY_NO
+			BOARD_TITLE
+			BOARD_CONTENT
+			BOARD_WRITER
+			COUNT
+			CREATE_DATE
+			STATUS
+		)
+		VALUES(
+		SEQ_MNO.NEXTVAL,
+		?,
+		?,
+		?,
+		?,
+		?,
+		?,
+		?
+		)
+	</entry>
+	<entry key="selectBoard">
+		SELECT BOARD_NO
+				BOARD_TYPE
+				CATEGORY_NO
+				BOARD_TITLE
+				BOARD_CONTENT
+				BOARD_WRITER
+				COUNT
+				CREATE_DATE
+				STATUS
+		FROM BOARD
+	</entry>
+</properties>
