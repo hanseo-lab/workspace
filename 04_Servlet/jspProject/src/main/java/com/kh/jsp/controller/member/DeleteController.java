@@ -10,18 +10,19 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 /**
- * Servlet implementation class InsertController
+ * Servlet implementation class DeleteController
  */
-@WebServlet("/insert.me")
-public class InsertController extends HttpServlet {
+@WebServlet("/delete.me")
+public class DeleteController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public InsertController() {
+    public DeleteController() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -30,36 +31,29 @@ public class InsertController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//member 추가
-		
-		
-		//전달받은 데이터를 추출
-		String userId = request.getParameter("userId");
 		String userPwd = request.getParameter("userPwd");
-		String userName = request.getParameter("userName");
-		String phone = request.getParameter("phone"); // "010~" || ""
-		String email = request.getParameter("email");  // "~~" || ""
-		String address = request.getParameter("address"); // "~~" || ""
-		String[] interestArr = request.getParameterValues("interest"); // ["sports...] || null
 		
-		//String[] -> string
-		String interest = "";
-		if(interestArr != null) {
-			interest = String.join(",", interestArr);
+		HttpSession session = request.getSession();
+		Member loginMember = (Member)session.getAttribute("loginMember");
+		
+		if(loginMember == null || !loginMember.getMemberPwd().equals(userPwd)) {
+			request.setAttribute("errorMsg", "정상적인 접근이 아닙니다.");
+			request.getRequestDispatcher("views/common/error.jsp").forward(request, response);
+			return;
 		}
 		
-		Member m = Member.insertCreateMember(userId, userPwd, userName, phone, email, address, interest);
+		int result = new MemberService().deleteMember(loginMember.getMemberId());
 		
-		int result = new MemberService().insertMember(m);
-		
-		if(result > 0) { //가입성공
-			request.getSession().setAttribute("alertMsg", "성공적으로 회원가입을 완료하였습니다.");
+		if(result == 0) { //업데이트 실패
+			request.setAttribute("errorMsg", "회원탈퇴에 실패하였습니다");
+			request.getRequestDispatcher("views/common/error.jsp").forward(request, response);
+		} else {
+			session.removeAttribute("loginMember");
+			session.setAttribute("alertMsg", "성공적으로 탈퇴하였습니다.");
 			
 			response.sendRedirect(request.getContextPath());
-		} else { //가입실패
-			request.setAttribute("errorMsg", "회원가입에 실패하였습니다.");
-			request.getRequestDispatcher("views/common/error.jsp");
 		}
+	
 	}
 
 	/**

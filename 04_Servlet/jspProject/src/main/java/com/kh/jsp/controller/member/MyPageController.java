@@ -1,23 +1,25 @@
 package com.kh.jsp.controller.member;
 
+import java.io.IOException;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import jakarta.servlet.http.HttpSession;
 
 /**
- * Servlet implementation class EnrollFromController
+ * Servlet implementation class MyPageController
  */
-@WebServlet("/enrollForm.me")
-public class EnrollFormController extends HttpServlet {
+@WebServlet("/myPage.me")
+public class MyPageController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public EnrollFormController() {
+    public MyPageController() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -26,7 +28,14 @@ public class EnrollFormController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.getRequestDispatcher("/views/member/enrollForm.jsp").forward(request, response);
+		HttpSession session = request.getSession();
+		
+		if(session.getAttribute("loginMember") == null) {
+			session.setAttribute("alertMsg", "잘못된 접근입니다.");
+			response.sendRedirect(request.getContextPath());
+		} else {
+			request.getRequestDispatcher("views/member/myPage.jsp").forward(request, response);
+		}
 	}
 
 	/**
