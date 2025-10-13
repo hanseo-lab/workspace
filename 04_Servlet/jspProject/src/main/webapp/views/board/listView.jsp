@@ -88,9 +88,11 @@
         <div class="board-card">
             <h2>일반게시판</h2>
 
-            <div class="write-btn-area">
-                <a class="btn btn-primary" href="${pageContext.request.contextPath}/insert.bo">글쓰기</a>
-            </div>
+			<c:if test="${not empty loginMember}">
+	            <div class="write-btn-area">
+	                <a class="btn btn-primary" href="${pageContext.request.contextPath}/enrollForm.bo">글쓰기</a>
+	            </div>
+            </c:if>
 
             <table class="board-table">
                 <thead>
@@ -104,25 +106,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                	<c:choose>
-                		<c:when test = "${not empty list}">
-                			<c:forEach var="b" items="${list}">
-                    <tr onclick="${pageContext.request.contextPath}/detail.bo">
-                        <td>${b.boardNo}</td>
-                        <td>${b.categoryName}</td>
-                        <td>${b.boardTitle}</td>
-                        <td>${b.boardWriter}</td>
-                        <td>${b.count}</td>
-                        <td>${b.createDate}</td>
-                    </tr>
-                    </c:forEach>
-                    </c:when>
-                    <c:otherwise>
-                    	<tr>
-                    		<td colspan="6">조회된 게시글이 없습니다.</td>
+                 	<c:forEach var="b" items="${list}">
+	                 	 <tr onclick="location.href='${pageContext.request.contextPath}/detail.bo?bno=${b.boardNo}'">
+	                        <td>${b.boardNo}</td>
+	                        <td>${b.categoryName}</td>
+	                        <td>${b.boardTitle}</td>
+	                        <td>${b.memberId}</td>
+	                        <td>${b.count}</td>
+	                        <td>${b.createDate}</td>
                     	</tr>
-                    </c:otherwise>
-                    </c:choose>
+                 	</c:forEach>
                 </tbody>
             </table>
 

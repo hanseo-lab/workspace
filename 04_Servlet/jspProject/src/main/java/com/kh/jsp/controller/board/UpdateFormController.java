@@ -1,16 +1,22 @@
 package com.kh.jsp.controller.board;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
+import com.kh.jsp.model.vo.Board;
+import com.kh.jsp.model.vo.Category;
+import com.kh.jsp.service.BoardService;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
- * Servlet implementation class UpdateFormController
+ * Servlet implementation class UpdateController
  */
-@WebServlet("/UpdateFormController")
+@WebServlet(name = "updateForm.bo", urlPatterns = { "/updateForm.bo" })
 public class UpdateFormController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -26,8 +32,17 @@ public class UpdateFormController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		int boardNo = Integer.parseInt(request.getParameter("bno"));
+		
+		BoardService boardService = new BoardService();
+		
+		ArrayList<Category> categories = boardService.selectAllCategory();
+		Board b = boardService.selectBoardByBoardNo(boardNo);
+		
+		request.setAttribute("categories", categories);
+		request.setAttribute("board", b);
+		
+		request.getRequestDispatcher("views/board/updateForm.jsp").forward(request, response);
 	}
 
 	/**

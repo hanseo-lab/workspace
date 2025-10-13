@@ -1,7 +1,6 @@
 package com.kh.jsp.controller.board;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import com.kh.jsp.model.vo.Board;
 import com.kh.jsp.service.BoardService;
@@ -13,16 +12,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class ListController
+ * Servlet implementation class DetailController
  */
-@WebServlet("/list.bo")
-public class ListController extends HttpServlet {
+@WebServlet("/detail.bo")
+public class DetailController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ListController() {
+    public DetailController() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -31,12 +30,23 @@ public class ListController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//board목록을 가져와서 응답페이지로 전달
+		//board정보를 조회해서 detailView.jsp을 응답
 		
-		ArrayList<Board> list = new BoardService().selectAllBoard();
+		int boardNo = Integer.parseInt(request.getParameter("bno"));
+		BoardService boardService = new BoardService();
 		
-		request.setAttribute("list", list);
-		request.getRequestDispatcher("views/board/listView.jsp").forward(request, response);
+		//board의 조회수 1 증가
+		int result = boardService.increaseCount(boardNo);
+		Board board = boardService.selectBoardByBoardNo(boardNo);
+		
+		if(result > 0 && board != null) {
+			request.setAttribute("board", board);
+			System.out.println(board);
+			request.getRequestDispatcher("views/board/detailView.jsp").forward(request, response);
+		} else {
+			request.setAttribute("errorMsg", "정상적인 접근이 아닙니다.");
+			request.getRequestDispatcher("views/common/error.jsp").forward(request, response);
+		}
 	}
 
 	/**
