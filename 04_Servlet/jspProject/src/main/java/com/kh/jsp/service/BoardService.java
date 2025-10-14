@@ -8,16 +8,27 @@ import static com.kh.jsp.common.JDBCTemplate.rollback;
 import java.sql.Connection;
 import java.util.ArrayList;
 
+import com.kh.common.vo.PageInfo;
 import com.kh.jsp.model.dao.BoardDao;
+import com.kh.jsp.model.vo.Attachment;
 import com.kh.jsp.model.vo.Board;
 import com.kh.jsp.model.vo.Category;
 
 public class BoardService {
 	
-	public ArrayList<Board> selectAllBoard(){
+	public int selectAllBoardCount(){
 		Connection conn = getConnection();
 		
-		ArrayList<Board> list = new BoardDao().selectAllBoard(conn);
+		int listCount = new BoardDao().selectAllBoardCount(conn);
+		close(conn);
+		
+		return listCount;
+	}
+	
+	public ArrayList<Board> selectAllBoard(PageInfo pi){
+		Connection conn = getConnection();
+		
+		ArrayList<Board> list = new BoardDao().selectAllBoard(conn, pi);
 		close(conn);
 		
 		return list;
@@ -46,6 +57,15 @@ public class BoardService {
 		return board;
 	}
 	
+	public Attachment selectAttachment(int boardNo) {
+		Connection conn = getConnection();
+		
+		Attachment at = new BoardDao().selectAttachment(conn, boardNo);
+		
+		close(conn);
+		return at;
+	}
+	
 	public ArrayList<Category> selectAllCategory() {
 		Connection conn = getConnection();
 		
@@ -64,6 +84,27 @@ public class BoardService {
 		b.setBoardContent(boardContent);
 		
 		int result = new BoardDao().updateBoard(conn, b);
+		
+		if(result > 0) {
+			commit(conn);
+		} else {
+			rollback(conn);
+		}
+		
+		close(conn);
+		return result;
+	}
+	
+	public int insertBoard(Board b, Attachment at) {
+		Connection conn = getConnection();
+		
+		BoardDao bDao = new BoardDao();
+		
+		int result = bDao.insertBoard(conn, b);
+		
+		if(at != null) {
+			result *= bDao.insertAttachment(conn, at);
+		}
 		
 		if(result > 0) {
 			commit(conn);
