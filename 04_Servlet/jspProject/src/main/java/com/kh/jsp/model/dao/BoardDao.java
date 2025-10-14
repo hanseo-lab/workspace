@@ -11,8 +11,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Properties;
 
-import com.kh.common.vo.PageInfo;
 import com.kh.jsp.common.JDBCTemplate;
+import com.kh.jsp.common.vo.PageInfo;
 import com.kh.jsp.model.vo.Attachment;
 import com.kh.jsp.model.vo.Board;
 import com.kh.jsp.model.vo.Category;

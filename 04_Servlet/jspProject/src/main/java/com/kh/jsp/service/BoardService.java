@@ -8,7 +8,7 @@ import static com.kh.jsp.common.JDBCTemplate.rollback;
 import java.sql.Connection;
 import java.util.ArrayList;
 
-import com.kh.common.vo.PageInfo;
+import com.kh.jsp.common.vo.PageInfo;
 import com.kh.jsp.model.dao.BoardDao;
 import com.kh.jsp.model.vo.Attachment;
 import com.kh.jsp.model.vo.Board;
