@@ -1,21 +1,17 @@
-# 🚀 프로젝트명 (Project Name)
-> 짧고 강렬한 한줄 소개 (ex: "회원 관리와 게시판 기능을 갖춘 JSP 기반 웹 애플리케이션")
+# 🚀 mybatisProject
+회원 관리와 게시판 기능을 갖춘 JSP, mybatis 기반 웹 애플리케이션
 
 ## 📘 개요 (Overview)
-- 프로젝트 목적과 주요 기능을 간단히 설명
-- 기술스택과 핵심 특징 요약
-(ex:
-	본 프로젝트는 **Servlet과 JSP를 이용한 MVC 패턴 기반의 웹 애플리케이션**으로,  
-	회원 관리(로그인·회원가입) 및 게시판 CRUD 기능을 중심으로 구성되었습니다.  
-	Oracle 데이터베이스와 JDBC를 통해 데이터 연동을 수행하며,  
-	Eclipse + Tomcat 환경에서 실행 가능합니다.
-)
+본 프로젝트는 **Servlet과 JSP와 mybatis를 이용한 MVC 패턴 기반의 웹 애플리케이션**으로,  
+회원 관리(로그인·회원가입) 및 게시판 CRUD 기능을 중심으로 구성되었습니다.  
+Oracle 데이터베이스와 JDBC를 통해 데이터 연동을 수행하며,  
+Eclipse + Tomcat 환경에서 실행 가능합니다.
 
 ## 🧱 기술 스택 (Tech Stack)
 | 구분 | 사용 기술 |
 |------|------------|
 | Frontend | HTML, CSS, JavaScript, JSP |
-| Backend | Java (Servlet, JDBC)|
+| Backend | Java (Servlet, JDBC, mybatis)|
 | Server| Apache Tomcat |
 | Database | Oracle |
 | Tools | Eclipse, Git, GitHub |
@@ -31,7 +27,7 @@ git clone https://github.com/username/project.git
 # 3. 데이터베이스(Oracle) 설정
 - Oracle 실행 후 데이터베이스 및 테이블 생성
 - src/main/webapp/WEB-INF/classes/sql 폴더 내 SQL 스크립트 실행
-- JDBC 연결 정보(application.properties 또는 JDBCTemplate.java) 수정
+- JDBC 연결 정보(mybatis-config.xml) 수정
 
 # 4. Tomcat 서버 설정
 - Eclipse > Servers > New > Server > Apache Tomcat 선택
@@ -39,7 +35,7 @@ git clone https://github.com/username/project.git
 
 # 5. 웹 애플리케이션 실행
 - 브라우저에서 접속
-http://localhost:8080/프로젝트명
+http://localhost:8000/my
 
 ## 📂 프로젝트 구조 (Directory Structure)
 project/
@@ -48,7 +44,7 @@ project/
  │   ├── com/project/model/dao/      # 데이터 접근 로직 (DAO)
  │   ├── com/project/model/vo/       # VO (Value Object)
  │   ├── com/project/service/        # 비즈니스 로직
- │   └── com/project/common/         # 공용 유틸 (JDBCTemplate 등)
+ │   └── com/project/common/         # 공용 유틸 (Template 등)
  ├── webapp/
  │   ├── WEB-INF/
  │   │   ├── views/                  # JSP 뷰 페이지
@@ -76,7 +72,7 @@ project/
 
 ## 💡 학습 포인트 (Learning Points)
 
-- JSP & Servlet 기반 MVC 구조 설계 방법 학습
+- JSP & Servlet & mybatis 기반 MVC 구조 설계 방법 학습
 - JDBC를 통한 데이터베이스 연결 및 SQL 처리 로직 구현
 - Tomcat 서버를 활용한 배포 및 실행 환경 이해
 - JSP 내 JSTL / EL 사용으로 동적 페이지 구현
