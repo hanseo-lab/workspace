@@ -1,5 +1,5 @@
 # 🚀 mybatisProject
-"회원 관리와 게시판 기능을 갖춘 JSP, mybatis 기반 웹 애플리케이션
+회원 관리와 게시판 기능을 갖춘 JSP, mybatis 기반 웹 애플리케이션
 
 ## 📘 개요 (Overview)
 본 프로젝트는 **Servlet과 JSP와 mybatis를 이용한 MVC 패턴 기반의 웹 애플리케이션**으로,  
