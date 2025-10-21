@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+         pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -104,59 +104,59 @@
     </style>
 </head>
 <body>
-	<jsp:include page="/WEB-INF/views/common/menubar.jsp" />
+<jsp:include page="/WEB-INF/views/common/menubar.jsp" />
 
-    <div class="board-container">
-        <div class="board-card">
-            <h2>사진게시글 상세보기</h2>
+<div class="board-container">
+    <div class="board-card">
+        <h2>사진게시글 상세보기</h2>
 
-            <table class="detail-table">
-                <tr>
-                    <th>제목</th>
-                    <td colspan="3">
-                        ${board.boardTitle}
-                    </td>
-                </tr>
-                <tr>
-                    <th>작성자</th>
-                    <td>${board.memberId}</td>
-                    <th>작성일</th>
-                    <td>${board.createDate}</td>
-                </tr>
-                <tr>
-                    <th>내용</th>
-                    <td colspan="3">
-                        <div class="content-area">
-                            ${board.boardContent}
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <th>대표이미지</th>
-                    <td colspan="3">
-                        <div class="thumbnail-area">
-                            <img src="${pageContext.request.contextPath}/${atList[0].filePath}${atList[0].changeName}" alt="대표이미지">
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <th>상세이미지</th>
-                    <td colspan="3">
-                        <div class="detail-images-area">
-                            <c:forEach var="at" items="${atList}">
-                            	<c:if test="${at.fileLevel == 2}">
-                            		<img src="${pageContext.request.contextPath}/${at.filePath}${at.changeName}" alt="상세이미지">
-                            	</c:if>
-                            </c:forEach>
-                        </div>
-                    </td>
-                </tr>
-            </table>
+        <table class="detail-table">
+            <tr>
+                <th>제목</th>
+                <td colspan="3">
+                    ${board.boardTitle}
+                </td>
+            </tr>
+            <tr>
+                <th>작성자</th>
+                <td>${board.memberId}</td>
+                <th>작성일</th>
+                <td>${board.createDate}</td>
+            </tr>
+            <tr>
+                <th>내용</th>
+                <td colspan="3">
+                    <div class="content-area">
+                        ${board.boardContent}
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th>대표이미지</th>
+                <td colspan="3">
+                    <div class="thumbnail-area">
+                        <img src="${pageContext.request.contextPath}/${atList[0].filePath}${atList[0].changeName}" alt="대표이미지">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th>상세이미지</th>
+                <td colspan="3">
+                    <div class="detail-images-area">
+                        <c:forEach var="at" items="${atList}">
+                            <c:if test="${at.fileLevel == 2}">
+                                <img src="${pageContext.request.contextPath}/${at.filePath}${at.changeName}" alt="상세이미지">
+                            </c:if>
+                        </c:forEach>
+                    </div>
+                </td>
+            </tr>
+        </table>
 
-            <div class="button-group">
-                <a href="${pageContext.request.contextPath}/list.th" class="btn btn-primary">목록가기</a>
-            </div>
+        <div class="button-group">
+            <a href="${pageContext.request.contextPath}/list.th" class="btn btn-primary">목록가기</a>
         </div>
     </div>
+</div>
 </body>
 </html>
