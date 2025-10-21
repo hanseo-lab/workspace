@@ -45,7 +45,6 @@ public class SearchController extends HttpServlet {
 							Integer.parseInt(request.getParameter("cpage")) : 1; //지금 보여줄 페이지(사용자가 요청한 페이지)
 		
 		int listCount = new BoardService().selectAllBoardCount(searchMap);//현재 총 게시글 수
-		System.out.println(listCount);
 		PageInfo pi = new PageInfo(currentPage, listCount, 5, 5);
 		 
 		ArrayList<Board> list = new BoardService().selectAllBoard(pi, searchMap);
