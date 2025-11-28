@@ -25,6 +25,7 @@ const StyledLink = styled(Link)`
   color: white;
   font-size: 18px;
   font-weight: bold;
+  text-decoration: none;
 
   &:hover {
     color: #ffd43b;
@@ -111,4 +112,4 @@ function App() {
   )
 }
 
-export default App
+export default App;

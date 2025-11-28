@@ -2,6 +2,11 @@ import React from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components';
 
+const Div = styled.div`
+    text-align: center;
+    margin-top: 50px;
+`
+
 const Container = styled.div`
     max-width: 500px;
     margin: 50px auto;
@@ -25,7 +30,6 @@ const Status = styled.span`
     color: ${(props) => (props.$isOnline ? 'green' : 'red')};
 `
 
-
 const UserDetail = ({ users, deleteUser }) => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -40,10 +44,10 @@ const UserDetail = ({ users, deleteUser }) => {
 
   if (!user) {
     return (
-      <div>
+      <Div>
         <div>존재하지 않는 유저입니다.</div>
         <button onClick={() => navigate('/')}>돌아가기</button>
-      </div>
+      </Div>
     )
   }
 
@@ -53,12 +57,14 @@ const UserDetail = ({ users, deleteUser }) => {
       <InfoText>ID: {user.id}</InfoText>
       <InfoText>이름: {user.name}</InfoText>
       <InfoText>나이: {user.age}세</InfoText>
-      <Status>상태: {user.isOnline ? '온라인' : '오프라인'}</Status>
-      <br />
+      <Status $isOnline={user.isOnline}>
+        상태: {user.isOnline ? '온라인' : '오프라인'}
+      </Status>
+      <br /><br />
       <button onClick={() => navigate('/')}>목록으로</button>
       <button onClick={handleDelete}>삭제</button>
     </Container>
   )
 }
 
-export default UserDetail
+export default UserDetail;

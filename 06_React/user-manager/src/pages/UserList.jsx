@@ -27,6 +27,8 @@ const UserList = ({users}) => {
             <button>유저 등록</button>
         </Link>
         
+        <br/><br/>
+
         <table>
             <thead>
                 <Tr>
@@ -56,4 +58,4 @@ const UserList = ({users}) => {
   )
 }
 
-export default UserList
+export default UserList;

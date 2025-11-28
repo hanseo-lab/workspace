@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
-const FormContainer = styled.div`
+const FormContainer = styled.form`
   max-width: 400px;
   margin: 50px auto;
   padding: 30px;
@@ -62,25 +62,27 @@ const UserRegistration = ({ addUser }) => {
 
   return (
     <div style={{ padding: '20px' }}>
-      <h2>유저 등록</h2>
+      <h2 style={{ textAlign: 'center' }}>유저 등록</h2>
       <FormContainer onSubmit={handleSubmit}>
         <StyledLabel>
-          이름 : <StyledInput type='text' value={name} onChange={(e) => setName(e.target.value)} />
+          이름 : <StyledInput type='text' value={name} onChange={(e) => setName(e.target.value)} placeholder="이름을 입력하세요" />
         </StyledLabel>
-        <br /><br />
+        
         <StyledLabel>
-          나이 : <StyledInput type='number' value={age} onChange={(e) => setAge(e.target.value)} />
+          나이 : <StyledInput type='number' value={age} onChange={(e) => setAge(e.target.value)} placeholder="나이를 입력하세요" />
         </StyledLabel>
-        <br /><br />
+        
         <StyledLabel>
-          온라인 여부 : <StyledInput type='checkbox' checked={isOnline} onChange={(e) => setIsOnline(e.target.checked)} />
+          온라인 여부 : <input type='checkbox' checked={isOnline} onChange={(e) => setIsOnline(e.target.checked)} />
         </StyledLabel>
-        <br /><br />
-        <button type='button' onClick={() => navigate('/')}>취소</button>
-        <button type='submit'>등록</button>
+        
+        <div>
+            <button type='button' onClick={() => navigate('/')}>취소</button>
+            <button type='submit'>등록</button>
+        </div>
       </FormContainer>
     </div>
   )
 }
 
-export default UserRegistration
+export default UserRegistration;
