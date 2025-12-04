@@ -70,7 +70,7 @@ export const Button = styled.button`
   border-radius: 5px;
   cursor: pointer;
   font-weight: 600;
-  background-color: ${props => props.variant === 'secondary' ? '#6c757d' : '#007bff'};
+  background-color: ${props => props.$variant === 'secondary' ? '#6c757d' : '#007bff'};
   color: white;
   
   &:hover {

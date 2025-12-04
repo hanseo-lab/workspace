@@ -182,7 +182,7 @@ const MyPage = () => {
           <ButtonGroup>
             {isEditing ? (
               <>
-                <Button type="button" variant="secondary" onClick={handleCancel}>
+                <Button type="button" $variant="secondary" onClick={handleCancel}>
                   취소
                 </Button>
                 <Button type="submit">저장</Button>

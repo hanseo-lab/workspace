@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate} from 'react-router-dom';
 import { useItems } from '../context/ItemContext';
 import { useAuth } from '../context/AuthContext';
-import { ActionButtons, BackButton, Button, CommentActions, CommentContent, CommentDate, CommentForm, CommentList, CommentsSection, CommentsTitle, CommentTextarea, Container, ItemContainer, ItemDescription, ItemHeader, ItemImage, ItemInfo, ItemMeta, ItemPrice, ItemTitle, SmallButton } from '../styles/ItemDetail.styled';
+import { ActionButtons, BackButton, Button, CommentActions, CommentAuthor, CommentContent, CommentDate, CommentForm, CommentHeader, CommentItem, CommentList, CommentsSection, CommentsTitle, CommentTextarea, Container, ItemContainer, ItemDescription, ItemHeader, ItemImage, ItemInfo, ItemMeta, ItemPrice, ItemTitle, SmallButton } from '../styles/ItemDetail.styled';
 
 const ItemDetailPage = () => {
   const { id } = useParams();
@@ -87,7 +87,7 @@ const ItemDetailPage = () => {
           {isAuthor && (
             <ActionButtons>
               <Button onClick={() => navigate(`/items/edit/${id}`)}>수정</Button>
-              <Button variant="danger" onClick={handleDelete}>삭제</Button>
+              <Button $variant="danger" onClick={handleDelete}>삭제</Button>
             </ActionButtons>
           )}
         </ItemHeader>
@@ -115,13 +115,13 @@ const ItemDetailPage = () => {
 
           <CommentList>
             {item.comments?.map(comment => (
-              <Comment key={comment.id}>
-                <CommentHeadet>
+              <CommentItem key={comment.id}>
+                <CommentHeader>
                   <CommentAuthor>{comment.author}</CommentAuthor>
                   <CommentDate>
                     {new Date(comment.createdAt).toLocaleString()}
                   </CommentDate>
-                </CommentHeadet>
+                </CommentHeader>
                 
                 {editingCommentId === comment.id ? (
                   <>
@@ -134,7 +134,7 @@ const ItemDetailPage = () => {
                         저장
                       </SmallButton>
                       <SmallButton 
-                        variant="secondary"
+                        $variant="secondary"
                         onClick={() => setEditingCommentId(null)}
                       >
                         취소
@@ -150,7 +150,7 @@ const ItemDetailPage = () => {
                           수정
                         </SmallButton>
                         <SmallButton 
-                          variant="danger"
+                          $variant="danger"
                           onClick={() => handleCommentDelete(comment.id)}
                         >
                           삭제
@@ -159,7 +159,7 @@ const ItemDetailPage = () => {
                     )}
                   </>
                 )}
-              </Comment>
+              </CommentItem>
             ))}
           </CommentList>
         </CommentsSection>

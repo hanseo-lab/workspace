@@ -101,7 +101,7 @@ export const Button = styled.button`
   cursor: pointer;
   font-size: 1rem;
   font-weight: 600;
-  background-color: ${props => props.variant === 'secondary' ? '#6c757d' : '#007bff'};
+  background-color: ${props => props.$variant === 'secondary' ? '#6c757d' : '#007bff'};
   color: white;
   
   &:hover {

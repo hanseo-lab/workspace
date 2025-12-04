@@ -69,8 +69,8 @@ export const Button = styled.button`
   cursor: pointer;
   font-weight: 500;
   background-color: ${props => {
-    if (props.variant === 'danger') return '#dc3545';
-    if (props.variant === 'secondary') return '#6c757d';
+    if (props.$variant === 'danger') return '#dc3545';
+    if (props.$variant === 'secondary') return '#6c757d';
     return '#007bff';
   }};
   color: white;
@@ -138,7 +138,7 @@ export const CommentList = styled.div`
   gap: 1rem;
 `;
 
-export const Comment = styled.div`
+export const CommentItem = styled.div`
   background: #f8f9fa;
   padding: 1rem;
   border-radius: 5px;
@@ -178,7 +178,7 @@ export const SmallButton = styled.button`
   border: none;
   border-radius: 3px;
   cursor: pointer;
-  background-color: ${props => props.variant === 'danger' ? '#dc3545' : '#6c757d'};
+  background-color: ${props => props.$variant === 'danger' ? '#dc3545' : '#6c757d'};
   color: white;
   
   &:hover {
