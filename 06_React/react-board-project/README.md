@@ -53,11 +53,7 @@ React를 사용한 중고 물품 거래 플랫폼입니다. 사용자는 물품�
 
 ```
 src/
-<<<<<<< HEAD
 ├── store/                 # Zustand 스토어
-=======
-├── store/                  # Zustand 스토어
->>>>>>> bf3e40625717d4637ade24d7ee4eb45d2c4234ed
 │   ├── authStore.js       # 인증 관련 상태 관리
 │   └── itemStore.js       # 물품 관련 상태 관리
 ├── context/               # Context API
@@ -75,7 +71,6 @@ src/
 │   ├── ItemFormPage.jsx   # 물품 등록/수정
 │   ├── MyPage.jsx         # 마이페이지
 │   └── NotFoundPage.jsx   # 404 페이지
-<<<<<<< HEAD
 ├── styles/                # 스타일 (Styled Components)
 │   ├── Home.styled.js
 │   ├── ItemDetail.styled.js
@@ -86,8 +81,6 @@ src/
 │   ├── Mypage.styled.js
 │   ├── NotFound.styled.js
 │   └── Signup.styled.js
-=======
->>>>>>> bf3e40625717d4637ade24d7ee4eb45d2c4234ed
 ├── routes/                # 라우팅 설정
 │   └── index.jsx          # 라우트 정의
 ├── App.jsx                # 메인 앱 컴포넌트
