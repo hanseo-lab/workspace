@@ -27,7 +27,7 @@ const useAuthStore = create((set) => ({
   
   isAuthenticated: () => {
     const user = JSON.parse(localStorage.getItem('user'));
-    return !!user;
+    return user ? true : false;
   }
 }));
 
