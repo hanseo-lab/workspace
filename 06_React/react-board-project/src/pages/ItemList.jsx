@@ -1,6 +1,127 @@
 import { useState, useMemo } from 'react';
+<<<<<<< HEAD
 import { useItems } from '../context/ItemContext';
 import{Container, Controls, EmptyState, Header, ItemCard, ItemGrid, ItemImage, ItemInfo, ItemMeta, ItemPrice, ItemTitle, SearchInput, Select, Title} from'../styles/ItemList.styled';
+=======
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import { useItems } from '../context/ItemContext';
+
+const Container = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+`;
+
+const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+`;
+
+const Title = styled.h1`
+  color: #333;
+`;
+
+const Controls = styled.div`
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+`;
+
+const SearchInput = styled.input`
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  width: 300px;
+  
+  &:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+`;
+
+const Select = styled.select`
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: white;
+  cursor: pointer;
+  
+  &:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+`;
+
+const ItemGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 2rem;
+`;
+
+const ItemCard = styled(Link)`
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s, box-shadow 0.2s;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  }
+`;
+
+const ItemImage = styled.div`
+  width: 100%;
+  height: 200px;
+  background-color: #f0f0f0;
+  background-image: url(${props => props.src});
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+`;
+
+const ItemInfo = styled.div`
+  padding: 1rem;
+`;
+
+const ItemTitle = styled.h3`
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+`;
+
+const ItemPrice = styled.p`
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #007bff;
+  margin-bottom: 0.5rem;
+`;
+
+const ItemMeta = styled.div`
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #666;
+`;
+
+const EmptyState = styled.div`
+  text-align: center;
+  padding: 4rem;
+  color: #666;
+  
+  h2 {
+    margin-bottom: 1rem;
+  }
+`;
+>>>>>>> bf3e40625717d4637ade24d7ee4eb45d2c4234ed
 
 const ItemListPage = () => {
   const { items } = useItems();
@@ -68,7 +189,11 @@ const ItemListPage = () => {
         <ItemGrid>
           {filteredAndSortedItems.map(item => (
             <ItemCard key={item.id} to={`/items/${item.id}`}>
+<<<<<<< HEAD
               <ItemImage src={item.image || undefined}>
+=======
+              <ItemImage src={item.image}>
+>>>>>>> bf3e40625717d4637ade24d7ee4eb45d2c4234ed
                 {!item.image && '이미지 없음'}
               </ItemImage>
               <ItemInfo>
