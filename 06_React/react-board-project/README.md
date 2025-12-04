@@ -273,13 +273,9 @@ console.log(JSON.parse(localStorage.getItem('user')));
 MIT License
 
 ## 👨‍💻 개발자
-<<<<<<< HEAD
 | 이름 | 역할 | 깃허브 | 이메일 |
 | :---: | :---: | :---: | :---: |
 | 신한서 | Frontend / Design / Planning | [@hanseo-lab](https://github.com/hanseo-lab) | hanseo.lab@gmail.com |
-=======
-
->>>>>>> bf3e40625717d4637ade24d7ee4eb45d2c4234ed
 ---
 
 **Made with React ⚛️**

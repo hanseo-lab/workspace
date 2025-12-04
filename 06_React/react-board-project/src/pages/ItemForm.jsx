@@ -1,128 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-<<<<<<< HEAD
 import { useItems } from '../context/ItemContext';
 import { useAuth } from '../context/AuthContext';
 import { BackButton, Button, ButtonGroup, Container, Form, FormContainer, FormGroup, ImagePreview, Input, Label, Textarea, Title } from '../styles/ItemForm.styled';
-=======
-import styled from 'styled-components';
-import { useItems } from '../context/ItemContext';
-import { useAuth } from '../context/AuthContext';
-
-const Container = styled.div`
-  max-width: 800px;
-  margin: 0 auto;
-`;
-
-const BackButton = styled(Link)`
-  display: inline-block;
-  color: #007bff;
-  text-decoration: none;
-  margin-bottom: 2rem;
-  
-  &:hover {
-    text-decoration: underline;
-  }
-`;
-
-const FormContainer = styled.div`
-  background: white;
-  border-radius: 10px;
-  padding: 2rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-`;
-
-const Title = styled.h1`
-  margin-bottom: 2rem;
-  color: #333;
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-`;
-
-const FormGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const Label = styled.label`
-  margin-bottom: 0.5rem;
-  color: #333;
-  font-weight: 500;
-`;
-
-const Input = styled.input`
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 1rem;
-  
-  &:focus {
-    outline: none;
-    border-color: #007bff;
-  }
-`;
-
-const Textarea = styled.textarea`
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 1rem;
-  min-height: 200px;
-  resize: vertical;
-  font-family: inherit;
-  
-  &:focus {
-    outline: none;
-    border-color: #007bff;
-  }
-`;
-
-const ImagePreview = styled.div`
-  width: 100%;
-  height: 300px;
-  background-color: #f0f0f0;
-  background-image: url(${props => props.src});
-  background-size: cover;
-  background-position: center;
-  border-radius: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #999;
-  margin-top: 0.5rem;
-`;
-
-const ButtonGroup = styled.div`
-  display: flex;
-  gap: 1rem;
-  justify-content: flex-end;
-`;
-
-const Button = styled.button`
-  padding: 0.75rem 2rem;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 600;
-  background-color: ${props => props.variant === 'secondary' ? '#6c757d' : '#007bff'};
-  color: white;
-  
-  &:hover {
-    opacity: 0.9;
-  }
-`;
-
-const Error = styled.div`
-  color: #dc3545;
-  font-size: 0.9rem;
-  margin-top: 0.5rem;
-`;
->>>>>>> bf3e40625717d4637ade24d7ee4eb45d2c4234ed
 
 const ItemFormPage = () => {
   const { id } = useParams();
@@ -287,15 +167,9 @@ const ItemFormPage = () => {
           </FormGroup>
 
           <ButtonGroup>
-<<<<<<< HEAD
             <Button
               type="button" 
               $variant="secondary"
-=======
-            <Button 
-              type="button" 
-              variant="secondary"
->>>>>>> bf3e40625717d4637ade24d7ee4eb45d2c4234ed
               onClick={() => navigate(isEditMode ? `/items/${id}` : '/items')}
             >
               취소
