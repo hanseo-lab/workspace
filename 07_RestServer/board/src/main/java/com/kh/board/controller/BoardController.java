@@ -60,4 +60,11 @@ public class BoardController {
             return new ResponseEntity<>("게시글 등록 실패", HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping("/{board_id}")
+    public ResponseEntity<BoardResponse.SimpleDto> getBoardDetail(@PathVariable Long board_id) {
+        Board board = boardService.findById(board_id);
+
+        return new ResponseEntity<>(BoardResponse.SimpleDto.of(board), HttpStatus.OK);
+    }
 }

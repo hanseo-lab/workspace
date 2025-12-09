@@ -38,4 +38,17 @@
         CURRENT_TIMESTAMP
         )
     </insert>
+    <select id="findById" resultMap="boardResult">
+        SELECT
+        BOARD_ID,
+        TITLE,
+        CONTENTS,
+        FILE_NAME,
+        MEMBER_EMAIL,
+        CREATE_AT,
+        UPDATE_AT
+        FROM BOARD
+        WHERE BOARD_ID = #{boardId}
+    </select>
+
 </mapper>

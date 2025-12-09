@@ -29,4 +29,9 @@ public class BoardServiceImpl implements BoardService {
     public int save(Board board) {
         return boardMapper.save(board);
     }
+
+    @Override
+    public Board findById(Long boardId){
+        return boardMapper.findById(boardId);
+    }
 }
