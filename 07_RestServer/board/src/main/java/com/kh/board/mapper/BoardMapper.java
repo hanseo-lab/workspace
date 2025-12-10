@@ -9,5 +9,7 @@ import java.util.List;
 public interface BoardMapper {
     List<Board> findAll();
     int save(Board board);
-    Board findById(Long boardId);
+    Board findOne(Long boardId);
+    int delete(Long boardId);
+    int update(Board board);
 }
