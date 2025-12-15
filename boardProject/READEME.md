@@ -64,6 +64,7 @@
     ├── store/              # Zustand 스토어 (auth, item)
     ├── styles/             # 스타일 파일 (*.styled.js)
     └── services/           # Axios 설정
+```
 
 🚀 설치 및 실행이 프로젝트는 백엔드와 프론트엔드 서버를 각각 실행해야 합니다.
 1. Backend 실행 (Spring Boot)
@@ -104,3 +105,4 @@ OAuth2 로그인: 카카오/구글 소셜 로그인 연동
 
 👨‍💻 개발자
 신한서 Full Stack Developer
+
