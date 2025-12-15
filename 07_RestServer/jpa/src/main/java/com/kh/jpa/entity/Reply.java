@@ -1,39 +1,31 @@
 package com.kh.jpa.entity;
 
+import com.kh.jpa.enums.commonStatus;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.CreationTimestamp;
-
-import java.time.LocalDateTime;
 
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
 @Entity
 @Table(name = "REPLY")
-public class Reply {
+public class Reply extends BaseTimeEntity {
+
     @Id
-    @Column(name = "reply_no")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long replyNo;
 
-    @Column(name = "reply_content", nullable = false)
+    @Column(nullable = false, length = 400)
     private String replyContent;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ref_bno", nullable = false)
+    @JoinColumn(name = "REF_BNO", nullable = false)
     private Board board;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reply_writer", nullable = false)
+    @JoinColumn(name = "REPLY_WRITER", nullable = false)
     private Member member;
 
-    @CreationTimestamp
-    @Column(name = "create_date", updatable = false)
-    private LocalDateTime createDate;
-
-    @Column(columnDefinition = "char(1) default 'Y' not null check (STATUS in ('Y', 'N'))")
-    private String status;
+    @Column(length = 1)
+    @Enumerated(EnumType.STRING)
+    private commonStatus status = commonStatus.Y;
 }

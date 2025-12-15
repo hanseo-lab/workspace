@@ -1,42 +1,34 @@
 package com.kh.jpa.entity;
 
+import com.kh.jpa.enums.commonStatus;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
 @Entity
 @Table(name = "MEMBER")
-@DynamicInsert
-public class Member {
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AttributeOverride(name = "createDate", column = @Column(name = "ENROLL_DATE"))
+@AttributeOverride(name = "modifiedDate", column = @Column(name = "MODIFY_DATE"))
+public class Member extends BaseTimeEntity {
 
     @Id
-    @Column(name = "user_id", length = 30)
+    @Column(length = 30)
     private String userId;
 
-    @Column(name = "user_pwd", length = 100, nullable = false)
+    @Column(length = 100, nullable = false)
     private String userPwd;
 
-    @Column(name = "user_name", length = 15, nullable = false)
+    @Column(length = 15, nullable = false)
     private String userName;
 
-    @Column(length = 254)
+    @Column(length = 255)
     private String email;
 
-    @Column(length = 1, columnDefinition = "char(1) check (gender in ('M', 'F'))")
-    private String gender;
+    @Column(length = 1)
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
-    @Column
     private Integer age;
 
     @Column(length = 13)
@@ -45,33 +37,13 @@ public class Member {
     @Column(length = 100)
     private String address;
 
-    @CreationTimestamp
-    @Column(name = "enroll_date", updatable = false)
-    private LocalDateTime enrollDate;
+    @Column(length = 1)
+    @Enumerated(EnumType.STRING)
+    private commonStatus status = commonStatus.Y;
 
-    @UpdateTimestamp
-    @Column(name = "modify_date")
-    private LocalDateTime modifyDate;
+    public enum Gender { M, F }
 
-    @Column(columnDefinition = "char(1) default 'Y' not null check (STATUS in ('Y', 'N'))")
-    private String status;
-
+    // --- 연관관계---
     @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
-    @ToString.Exclude
     private Profile profile;
-
-    @OneToMany(mappedBy = "member")
-    @Builder.Default
-    @ToString.Exclude
-    private List<Notice> notices = new ArrayList<>();
-
-    @OneToMany(mappedBy = "member")
-    @Builder.Default
-    @ToString.Exclude
-    private List<Board> boards = new ArrayList<>();
-
-    @OneToMany(mappedBy = "member")
-    @Builder.Default
-    @ToString.Exclude
-    private List<Reply> replies = new ArrayList<>();
 }

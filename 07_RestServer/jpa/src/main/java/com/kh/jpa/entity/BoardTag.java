@@ -4,23 +4,23 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
 @Entity
-@Table(name = "BOARD_TAG")
+@Table(name = "BOARD_TAG", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"BOARD_NO", "TAG_ID"}) // DB Unique 제약 반영
+})
 public class BoardTag {
 
-    @EmbeddedId
-    private BoardTagId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "BOARD_TAG_NO")
+    private Long boardTagNo;
 
-    @MapsId("board")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "BOARD_NO")
+    @JoinColumn(name = "BOARD_NO", nullable = false)
     private Board board;
 
-    @MapsId("tag")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "TAG_ID")
+    @JoinColumn(name = "TAG_ID", nullable = false)
     private Tag tag;
 }
