@@ -1,28 +1,22 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
-export const LayoutContainer = styled.div`
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-`;
-
-export const Header = styled.header`
-  background-color: var(--white);
-  box-shadow: var(--shadow);
+export const HeaderContainer = styled.header`
+  background-color: var(--surface);
+  border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
   z-index: 100;
-  padding: 0 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 `;
 
-export const Nav = styled.nav`
+export const HeaderContent = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1000px;
-  margin: 0 auto;
-  height: 70px;
 `;
 
 export const Logo = styled(Link)`
@@ -32,49 +26,34 @@ export const Logo = styled(Link)`
   letter-spacing: -0.5px;
 `;
 
-export const NavLinks = styled.div`
+export const Nav = styled.nav`
   display: flex;
-  align-items: center;
   gap: 1.5rem;
+  align-items: center;
 `;
 
 export const NavLink = styled(Link)`
-  color: var(--text-main);
-  font-weight: 600;
-  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-sub);
   transition: color 0.2s;
-  
+
   &:hover {
     color: var(--primary);
   }
 `;
 
-export const UserInfo = styled.span`
-  font-weight: 600;
-  color: var(--text-sub);
-  margin-right: 0.5rem;
-`;
-
-export const Button = styled.button`
-  background-color: ${props => props.$variant === 'primary' ? 'var(--primary)' : '#e2e8f0'};
-  color: ${props => props.$variant === 'primary' ? 'white' : 'var(--text-main)'};
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  
-  &:hover {
-    background-color: ${props => props.$variant === 'primary' ? 'var(--primary-hover)' : '#cbd5e1'};
-    transform: translateY(-1px);
-  }
-`;
-
 export const Main = styled.main`
-  flex: 1;
-  max-width: 1000px;
-  width: 100%;
-  margin: 2rem auto;
-  padding: 0 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  min-height: calc(100vh - 160px);
+`;
+
+export const Footer = styled.footer`
+  background-color: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-sub);
+  margin-top: auto;
 `;

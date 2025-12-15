@@ -1,56 +1,30 @@
 package com.kh.board.service;
 
-import com.kh.board.entity.Product;
-import com.kh.board.repository.ProductRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import com.kh.board.dto.request.ProductRequestDto;
+import com.kh.board.dto.request.ProductUpdateDto;
+import com.kh.board.dto.request.ReplyRequestDto;
+import com.kh.board.dto.response.ProductResponseDto;
+import com.kh.board.dto.response.ReplyResponseDto;
 
+import java.io.IOException;
 import java.util.List;
 
-@Service
-@RequiredArgsConstructor
-public class ProductService {
+public interface ProductService {
+    List<ProductResponseDto> getAllProducts();
+    List<ProductResponseDto> searchProducts(String keyword);
+    List<ProductResponseDto> getProductsByCategory(String category);
 
-    private final ProductRepository productRepository;
+    // [추가] 찜 목록 조회
+    List<ProductResponseDto> getMemberWishlist(Long memberId);
 
-    // 전체 조회
-    public List<Product> getAllProducts() {
-        return productRepository.findAllByOrderByCreatedAtDesc();
-    }
+    ProductResponseDto getProduct(Long id);
+    ProductResponseDto createProduct(ProductRequestDto dto) throws IOException;
+    ProductResponseDto updateProduct(Long id, ProductUpdateDto dto);
+    void deleteProduct(Long id);
 
-    // 상세 조회
-    public Product getProduct(Long id) {
-        return productRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다. id=" + id));
-    }
+    ReplyResponseDto addReply(Long productId, ReplyRequestDto dto);
+    List<ReplyResponseDto> getReplies(Long productId);
 
-    // 등록
-    @Transactional
-    public Product createProduct(Product product) {
-        if(product.getStatus() == null) {
-            product.setStatus("FOR_SALE");
-        }
-        return productRepository.save(product);
-    }
-
-    // 삭제
-    @Transactional
-    public void deleteProduct(Long id) {
-        productRepository.deleteById(id);
-    }
-
-    // 수정 (제목, 내용, 가격, 상태, 이미지)
-    @Transactional
-    public Product updateProduct(Long id, Product requestProduct) {
-        Product product = getProduct(id);
-
-        product.setTitle(requestProduct.getTitle());
-        product.setContent(requestProduct.getContent());
-        product.setPrice(requestProduct.getPrice());
-        product.setImageUrl(requestProduct.getImageUrl());
-        product.setStatus(requestProduct.getStatus());
-
-        return product; // Transactional 어노테이션에 의해 자동 업데이트 (Dirty Checking)
-    }
+    boolean toggleWishlist(Long memberId, Long productId);
+    boolean isWished(Long memberId, Long productId);
 }

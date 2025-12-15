@@ -2,6 +2,7 @@ package com.kh.board.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -31,9 +32,14 @@ public class Product {
 
     private String imageUrl;
 
+    private String category;
+
+    @ColumnDefault("0")
+    private int viewCount;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 
     @Column(columnDefinition = "VARCHAR(20) DEFAULT 'FOR_SALE'")
-    private String status;
+    private String status; // FOR_SALE, RESERVED, SOLD_OUT
 }

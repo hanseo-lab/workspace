@@ -1,122 +1,131 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import useItemStore from '../store/itemStore';
+import { useNavigate, useParams } from 'react-router-dom';
+import axios from 'axios';
 import useAuthStore from '../store/authStore';
-import { BackButton, Button, ButtonGroup, Container, Form, FormContainer, FormGroup, ImagePreview, Input, Label, Textarea, Title } from '../styles/ItemForm.styled';
+import { Button, Container, Form, FormGroup, Input, Label, Textarea, Title, Select, RequiredMark, BackButton } from '../styles/ItemForm.styled';
+
+const CATEGORIES = ["디지털/가전", "가구/인테리어", "의류", "생활용품", "기타"];
 
 const ItemFormPage = () => {
-  const { id } = useParams();
   const navigate = useNavigate();
-  
-  const { getItemById, addItem, updateItem } = useItemStore();
+  const { id } = useParams();
   const user = useAuthStore((state) => state.user);
   
-  const isEditMode = !!id;
-
-  const [formData, setFormData] = useState({
-    title: '',
-    price: '',
-    description: '',
-    image: ''
-  });
-  const [errors, setErrors] = useState({});
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [price, setPrice] = useState('');
+  const [category, setCategory] = useState('기타'); 
+  const [imageFile, setImageFile] = useState(null);
 
   useEffect(() => {
-    if (isEditMode) {
-      const loadItem = async () => {
-         const item = await getItemById(id);
-         if (item) {
-            if (item.seller !== user.name) { 
-              alert('수정 권한이 없습니다.');
-              navigate('/items');
-              return;
-            }
-            setFormData({
-              title: item.title,
-              price: item.price,
-              description: item.content || item.description, // content 필드명 대응
-              image: item.imageUrl || ''
-            });
-         } else {
-         }
-      }
-      loadItem();
+    if (id) {
+      axios.get(`/api/products/${id}`)
+        .then(res => {
+          const data = res.data;
+          setTitle(data.title);
+          setContent(data.content);
+          setPrice(data.price);
+          setCategory(data.category || '기타');
+        })
+        .catch(err => {
+          alert("상품 정보를 불러오지 못했습니다.");
+          navigate('/items');
+        });
     }
-  }, [id, isEditMode, getItemById, user, navigate]);
-
-  const validateForm = () => {
-    const newErrors = {};
-    if (!formData.title.trim()) newErrors.title = '제목을 입력해주세요.';
-    if (!formData.price) newErrors.price = '가격을 입력해주세요.';
-    else if (isNaN(formData.price) || Number(formData.price) < 0) newErrors.price = '올바른 가격을 입력해주세요.';
-    if (!formData.description.trim()) newErrors.description = '설명을 입력해주세요.';
-    return newErrors;
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
-  };
+  }, [id, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const validationErrors = validateForm();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
+
+    // 브라우저 required 속성이 1차로 막아주지만, 이중 체크
+    if (!title || !content || !price) {
+      alert('필수 항목을 모두 입력해주세요.');
       return;
     }
 
-    const itemData = {
-      ...formData,
-      content: formData.description, 
-      price: Number(formData.price),
-      seller: user.name, 
-    };
+    try {
+      if (id) {
+        await axios.put(`/api/products/${id}`, {
+          title, content, price: parseInt(price), 
+          category, status: 'FOR_SALE'
+        });
+        alert('수정되었습니다.');
+      } else {
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('content', content);
+        formData.append('price', price);
+        formData.append('category', category);
+        formData.append('seller', user?.name || '익명');
+        if (imageFile) formData.append('imageFile', imageFile);
 
-    if (isEditMode) {
-      await updateItem(id, itemData);
-      navigate(`/items/${id}`);
-    } else {
-      const newItem = await addItem(itemData);
-      // newItem이 정상적으로 반환된다면 ID로 이동, 아니면 목록 이동
-      if(newItem && newItem.id) navigate(`/items/${newItem.id}`);
-      else navigate('/items');
+        await axios.post('/api/products', formData);
+        alert('등록되었습니다!');
+      }
+      navigate('/items');
+    } catch (error) {
+      console.error(error);
+      alert('오류 발생');
     }
   };
 
   return (
     <Container>
-      <BackButton to={isEditMode ? `/items/${id}` : '/items'}>← 뒤로가기</BackButton>
-      <FormContainer>
-        <Title>{isEditMode ? '물품 수정' : '물품 등록'}</Title>
-        <Form onSubmit={handleSubmit}>
-             <FormGroup>
-                <Label htmlFor="title">제목 *</Label>
-                <Input type="text" id="title" name="title" value={formData.title} onChange={handleChange} placeholder="물품 제목"/>
-                {errors.title && <e>{errors.title}</e>}
-             </FormGroup>
-             <FormGroup>
-                <Label htmlFor="price">가격 (원) *</Label>
-                <Input type="number" id="price" name="price" value={formData.price} onChange={handleChange} placeholder="0" min="0"/>
-                {errors.price && <e>{errors.price}</e>}
-             </FormGroup>
-             <FormGroup>
-                <Label htmlFor="description">설명 *</Label>
-                <Textarea id="description" name="description" value={formData.description} onChange={handleChange} placeholder="상세 설명"/>
-                {errors.description && <e>{errors.description}</e>}
-             </FormGroup>
-             <FormGroup>
-                <Label htmlFor="image">이미지 URL</Label>
-                <Input type="url" id="image" name="image" value={formData.image} onChange={handleChange} placeholder="https://..."/>
-                {formData.image && <ImagePreview src={formData.image} />}
-             </FormGroup>
-             <ButtonGroup>
-                <Button type="button" $variant="secondary" onClick={() => navigate('/items')}>취소</Button>
-                <Button type="submit">{isEditMode ? '수정하기' : '등록하기'}</Button>
-             </ButtonGroup>
-        </Form>
-      </FormContainer>
+      <BackButton to="/items">← 목록으로</BackButton>
+      <Title>{id ? '상품 수정' : '상품 등록'}</Title>
+      <Form onSubmit={handleSubmit}>
+        <FormGroup>
+          <Label>카테고리 <RequiredMark>*</RequiredMark></Label>
+          <Select 
+            value={category} 
+            onChange={(e) => setCategory(e.target.value)}
+          >
+            {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+          </Select>
+        </FormGroup>
+
+        <FormGroup>
+          <Label>제목 <RequiredMark>*</RequiredMark></Label>
+          <Input 
+            value={title} 
+            onChange={(e) => setTitle(e.target.value)} 
+            placeholder="상품 제목을 입력하세요" 
+            required 
+          />
+        </FormGroup>
+
+        {!id && (
+            <FormGroup>
+                <Label>사진</Label>
+                {/* 사진은 필수가 아니면 RequiredMark 생략 */}
+                <Input type="file" accept="image/*" onChange={(e)=>setImageFile(e.target.files[0])} />
+            </FormGroup>
+        )}
+
+        <FormGroup>
+          <Label>가격 <RequiredMark>*</RequiredMark></Label>
+          <Input 
+            type="number" 
+            value={price} 
+            onChange={(e) => setPrice(e.target.value)} 
+            placeholder="가격을 입력하세요 (숫자만)" 
+            required 
+          />
+        </FormGroup>
+
+        <FormGroup>
+          <Label>내용 <RequiredMark>*</RequiredMark></Label>
+          <Textarea 
+            value={content} 
+            onChange={(e) => setContent(e.target.value)} 
+            placeholder="상품에 대한 자세한 설명을 적어주세요" 
+            rows="5" 
+            required 
+          />
+        </FormGroup>
+
+        <Button type="submit">{id ? '수정완료' : '등록하기'}</Button>
+      </Form>
     </Container>
   );
 };

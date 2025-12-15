@@ -1,62 +1,40 @@
 import { create } from 'zustand';
 import axios from 'axios';
 
-const API_URL = '/api/products'
-const useItemStore = create((set, get) => ({
+const useItemStore = create((set) => ({
   items: [],
   
-  // 전체 조회 (초기 로딩용)
-  fetchItems: async () => {
+  // 전체 조회 / 검색 / 카테고리
+  fetchItems: async (keyword = '', category = '') => {
     try {
-      const response = await axios.get(API_URL);
+      let url = '/api/products';
+      const params = new URLSearchParams();
+      if (keyword) params.append('keyword', keyword);
+      if (category && category !== '전체') params.append('category', category);
+      
+      const response = await axios.get(`${url}?${params.toString()}`);
       set({ items: response.data });
     } catch (error) {
-      console.error('상품 목록 불러오기 실패:', error);
+      console.error('상품 목록 로딩 실패', error);
     }
   },
 
-  // 상세 조회
   getItemById: async (id) => {
-    // 1. 스토어에 있으면 그거 반환, 없으면 서버 요청 (선택 사항)
     try {
-        const response = await axios.get(`${API_URL}/${id}`);
-        return response.data;
-    } catch (error) {
-        console.error('상품 조회 실패', error);
-    }
-  },
-  
-  addItem: async (itemData) => {
-    try {
-      // itemData에는 title, content(description), price, imageUrl, seller 등이 포함되어야 함
-      const response = await axios.post(API_URL, itemData);
-      set((state) => ({ items: [response.data, ...state.items] })); // 최신글 맨 앞
+      const response = await axios.get(`/api/products/${id}`);
       return response.data;
     } catch (error) {
-      console.error('상품 등록 실패:', error);
-      throw error;
+      console.error('상품 상세 로딩 실패', error);
+      return null;
     }
   },
-  
-  updateItem: async (id, updatedData) => {
-    try {
-      const response = await axios.put(`${API_URL}/${id}`, updatedData);
-      set((state) => ({
-        items: state.items.map(item => item.id === id ? response.data : item)
-      }));
-    } catch (error) {
-      console.error('수정 실패:', error);
-    }
-  },
-  
+
   deleteItem: async (id) => {
     try {
-      await axios.delete(`${API_URL}/${id}`);
-      set((state) => ({
-        items: state.items.filter(item => item.id !== id)
-      }));
+      await axios.delete(`/api/products/${id}`);
+      set((state) => ({ items: state.items.filter((item) => item.id !== id) }));
     } catch (error) {
-      console.error('삭제 실패:', error);
+      console.error('삭제 실패', error);
     }
   }
 }));

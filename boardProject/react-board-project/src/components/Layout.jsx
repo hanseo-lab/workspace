@@ -1,47 +1,43 @@
-import { Outlet, useNavigate } from 'react-router-dom';
-import useAuthStore from '../store/authStore'; // Context 대신 Store import
-import { Button, Header, LayoutContainer, Logo, Main, Nav, NavLink, NavLinks, UserInfo } from '../styles/Layout.styled';
+import { Outlet } from 'react-router-dom';
+import useAuthStore from '../store/authStore';
+import { Footer, HeaderContainer, HeaderContent, Logo, Main, Nav, NavLink } from '../styles/Layout.styled';
 
 const Layout = () => {
-  // Zustand State 가져오기
-  const user = useAuthStore((state) => state.user);
-  const logout = useAuthStore((state) => state.logout);
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-    navigate('/');
-  };
+  const { user, logout } = useAuthStore();
 
   return (
-    <LayoutContainer>
-      <Header>
-        <Nav>
-          <Logo to="/">중고거래 마켓</Logo>
-          <NavLinks>
-            <NavLink to="/">홈</NavLink>
-            <NavLink to="/items">물품 목록</NavLink>
-            {user && <NavLink to="/items/new">물품 등록</NavLink>}
-            
+    <>
+      <HeaderContainer>
+        <HeaderContent>
+          <Logo to="/">중고마켓</Logo>
+          <Nav>
+            <NavLink to="/items">매물보기</NavLink>
             {user ? (
               <>
-                <UserInfo>{user.name}님</UserInfo>
+                <NavLink to="/items/new">판매하기</NavLink>
                 <NavLink to="/mypage">마이페이지</NavLink>
-                <Button onClick={handleLogout} $variant="secondary">로그아웃</Button>
+                <NavLink as="button" onClick={logout} style={{background:'none', border:'none', cursor:'pointer'}}>
+                  로그아웃
+                </NavLink>
               </>
             ) : (
               <>
                 <NavLink to="/login">로그인</NavLink>
-                <Button onClick={() => navigate('/signup')} $variant="primary">회원가입</Button>
+                <NavLink to="/signup">회원가입</NavLink>
               </>
             )}
-          </NavLinks>
-        </Nav>
-      </Header>
+          </Nav>
+        </HeaderContent>
+      </HeaderContainer>
+      
       <Main>
         <Outlet />
       </Main>
-    </LayoutContainer>
+
+      <Footer>
+        © 2025 Used Market Project. All rights reserved.
+      </Footer>
+    </>
   );
 };
 

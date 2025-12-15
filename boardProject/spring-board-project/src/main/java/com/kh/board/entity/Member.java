@@ -6,7 +6,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -15,16 +16,18 @@ public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // DB 내부 식별용
+    private Long id;
 
     @Column(unique = true, nullable = false)
-    private String email; // 로그인 아이디로 사용
+    private String email;
 
     @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
     private String name;
+
+    private String address; // [추가] 주소
 
     @CreationTimestamp
     private LocalDateTime createdAt;

@@ -2,29 +2,85 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import useItemStore from '../store/itemStore';
 import useAuthStore from '../store/authStore';
-import { ActionButtons, BackButton, Button, Container, ItemContainer, ItemDescription, ItemHeader, ItemImage, ItemInfo, ItemMeta, ItemPrice, ItemTitle } from '../styles/ItemDetail.styled';
+import axios from 'axios';
+import { 
+  Container, BackButton, ItemContainer, ItemHeader, ItemInfoMain, 
+  CategoryBadge, ItemTitle, StatusTag, ItemPrice, ItemMeta, 
+  ActionSection, LikeButton, StatusSelect, ButtonGroup, ActionButton,
+  ItemImage, NoImage, ItemContent, CommentSection, CommentTitle,
+  CommentForm, CommentInput, CommentButton, CommentList, CommentItem,
+  CommentHeader, Writer, DateText
+} from '../styles/ItemDetail.styled';
 
 const ItemDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  
-  // Zustand 사용
   const { getItemById, deleteItem } = useItemStore();
   const user = useAuthStore((state) => state.user);
   
   const [item, setItem] = useState(null);
+  const [comments, setComments] = useState([]); 
+  const [newComment, setNewComment] = useState("");
+  const [isWished, setIsWished] = useState(false);
 
   useEffect(() => {
     const loadItem = async () => {
       const foundItem = await getItemById(id);
-      if (foundItem) {
-        setItem(foundItem);
-      } else {
-        // navigate('/404'); // 에러 페이지가 있다면
-      }
+      if (foundItem) setItem(foundItem);
     };
     loadItem();
-  }, [id, getItemById]);
+    fetchComments();
+    if(user) checkWishlist();
+  }, [id, user]);
+
+  const fetchComments = async () => {
+      try {
+          const res = await axios.get(`/api/products/${id}/comments`);
+          setComments(res.data);
+      } catch (e) { console.error("댓글 로딩 실패"); }
+  };
+
+  const checkWishlist = async () => {
+      try {
+          const res = await axios.get(`/api/products/${id}/wishlist/${user.id}`);
+          setIsWished(res.data);
+      } catch (e) { console.error("찜 확인 실패"); }
+  };
+
+  const handleWishlist = async () => {
+      if(!user) return alert("로그인이 필요합니다.");
+      try {
+          await axios.post(`/api/products/${id}/wishlist`, { memberId: user.id });
+          checkWishlist(); 
+      } catch (e) { alert("오류 발생"); }
+  };
+
+  const handleCommentSubmit = async () => {
+      if(!user) return alert("로그인이 필요합니다.");
+      
+      if(item.status === 'SOLD_OUT') return alert("판매가 완료된 상품입니다.");
+      
+      if(!newComment.trim()) return;
+      try {
+          await axios.post(`/api/products/${id}/comments`, {
+              memberId: user.id,
+              content: newComment
+          });
+          setNewComment("");
+          fetchComments(); 
+      } catch (e) { alert("댓글 등록 실패"); }
+  };
+
+  const handleStatusChange = async (e) => {
+    const newStatus = e.target.value;
+    try {
+        await axios.put(`/api/products/${id}`, { status: newStatus });
+        setItem(prev => ({ ...prev, status: newStatus }));
+        alert("상태가 변경되었습니다.");
+    } catch (e) {
+        alert("상태 변경 실패");
+    }
+  };
 
   const handleDelete = async () => {
     if (window.confirm('정말 삭제하시겠습니까?')) {
@@ -33,45 +89,104 @@ const ItemDetailPage = () => {
     }
   };
 
-  // 백엔드 API가 아직 댓글 기능을 지원하지 않으므로 댓글 부분은 주석 처리하거나 
-  // Product 엔티티에 Comment 리스트를 추가하는 작업을 백엔드에서 먼저 해야 합니다.
-  
   if (!item) return <Container>로딩 중...</Container>;
-
-  // 작성자 확인 (백엔드에서는 seller로 저장됨) -> 로그인한 user.name과 비교
-  const isAuthor = user && (user.name === item.seller || user.email === item.seller); 
+  
+  const isAuthor = user && (user.name === item.seller || user.email === item.seller);
+  const getImageUrl = (url) => url ? (url.startsWith('http') ? url : `http://localhost:8080${url}`) : null;
+  
+  // [추가] 판매 완료 여부 확인
+  const isSoldOut = item.status === 'SOLD_OUT';
 
   return (
     <Container>
-      <BackButton to="/items">← 목록으로</BackButton>
+      <BackButton to="/items">← 목록으로 돌아가기</BackButton>
       
       <ItemContainer>
         <ItemHeader>
-          <ItemInfo>
-            <ItemTitle>{item.title}</ItemTitle>
+          <ItemInfoMain>
+            <CategoryBadge>{item.category || '기타'}</CategoryBadge>
+            <ItemTitle>
+                {item.title} 
+                {item.status !== 'FOR_SALE' && (
+                    <StatusTag $status={item.status}>
+                        {item.status === 'RESERVED' ? '예약중' : '판매완료'}
+                    </StatusTag>
+                )}
+            </ItemTitle>
             <ItemPrice>{item.price.toLocaleString()}원</ItemPrice>
             <ItemMeta>
               <span>판매자: {item.seller}</span>
-              <span>등록일: {new Date(item.createdAt).toLocaleString()}</span>
+              <span>·</span>
+              <span>{new Date(item.createdAt).toLocaleDateString()}</span>
+              <span>·</span>
+              <span>조회 {item.viewCount}</span>
             </ItemMeta>
-          </ItemInfo>
+          </ItemInfoMain>
           
-          {isAuthor && (
-            <ActionButtons>
-              {/* 수정 페이지로 이동 */}
-              <Button onClick={() => navigate(`/items/edit/${id}`)}>수정</Button>
-              <Button $variant="danger" onClick={handleDelete}>삭제</Button>
-            </ActionButtons>
-          )}
+          <ActionSection>
+            <LikeButton onClick={handleWishlist}>
+                 {isWished ? '❤️' : '🤍'}
+            </LikeButton>
+            
+            {isAuthor && (
+              <>
+                  <StatusSelect value={item.status} onChange={handleStatusChange}>
+                      <option value="FOR_SALE">🟢 판매중</option>
+                      <option value="RESERVED">🟡 예약중</option>
+                      <option value="SOLD_OUT">🔴 판매완료</option>
+                  </StatusSelect>
+                  
+                  <ButtonGroup>
+                    <ActionButton onClick={() => navigate(`/items/edit/${id}`)}>수정</ActionButton>
+                    <ActionButton $variant="danger" onClick={handleDelete}>삭제</ActionButton>
+                  </ButtonGroup>
+              </>
+            )}
+          </ActionSection>
         </ItemHeader>
 
-        {item.imageUrl ? <ItemImage src={item.imageUrl} /> : <ItemImage>이미지 없음</ItemImage>}
+        {item.imageUrl ? (
+            <ItemImage src={getImageUrl(item.imageUrl)} alt={item.title} />
+        ) : (
+            <NoImage>이미지가 없습니다</NoImage>
+        )}
         
-        <ItemDescription>{item.content}</ItemDescription> 
-        {/* description -> content (백엔드 필드명과 일치) */}
+        <ItemContent>{item.content}</ItemContent> 
 
-        {/* 댓글 섹션은 백엔드 Comment 구현 후 주석 해제하여 연결하세요 */}
-        {/* <CommentsSection> ... </CommentsSection> */}
+        <CommentSection>
+            <CommentTitle>문의 / 댓글 ({comments.length})</CommentTitle>
+            <CommentForm>
+                <CommentInput 
+                    type="text" 
+                    value={newComment} 
+                    onChange={(e)=>setNewComment(e.target.value)}
+                    placeholder={
+                        isSoldOut 
+                        ? "판매가 완료되어 댓글을 작성할 수 없습니다." 
+                        : (user ? "상품에 대해 궁금한 점을 남겨주세요." : "로그인 후 작성 가능합니다.")
+                    }
+                    disabled={!user || isSoldOut}
+                />
+                <CommentButton 
+                    onClick={handleCommentSubmit}
+                    disabled={!user || isSoldOut}
+                >
+                    등록
+                </CommentButton>
+            </CommentForm>
+            
+            <CommentList>
+                {comments.map(c => (
+                    <CommentItem key={c.id}>
+                        <CommentHeader>
+                            <Writer>{c.writerName}</Writer>
+                            <DateText>{new Date(c.createdAt).toLocaleString()}</DateText>
+                        </CommentHeader>
+                        <div>{c.content}</div>
+                    </CommentItem>
+                ))}
+            </CommentList>
+        </CommentSection>
 
       </ItemContainer>
     </Container>
