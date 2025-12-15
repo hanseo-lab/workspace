@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import {Button, Container, Error, Form, FormGroup, Input, Label, SignupLink, Title} from '../styles/Login.styled';
+import useAuthStore from '../store/authStore';
+import { Button, Container, Error, Form, FormGroup, Input, Label, SignupLink, Title } from '../styles/Login.styled';
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -9,7 +9,9 @@ const LoginPage = () => {
     password: ''
   });
   const [error, setError] = useState('');
-  const { login } = useAuth();
+
+  const login = useAuthStore((state) => state.login);
+  
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -33,7 +35,8 @@ const LoginPage = () => {
       await login(formData.email, formData.password);
       navigate('/');
     } catch (err) {
-      setError(err.message);
+      // 에러 메시지 처리 (백엔드 응답 없을 경우 대비)
+      setError(err.message || '로그인에 실패했습니다.');
     }
   };
 

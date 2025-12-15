@@ -1,8 +1,8 @@
-import { useItems } from '../context/ItemContext';
+import useItemStore from '../store/itemStore'; 
 import { Banner, BannerButton, Container, ItemCard, ItemGrid, ItemImage, ItemInfo, ItemPrice, ItemTitle, Section, SectionTitle, Subtitle, Title } from '../styles/Home.styled';
 
 const HomePage = () => {
-  const { items } = useItems();
+  const items = useItemStore((state) => state.items); 
   const recentItems = items.slice(-6).reverse();
 
   return (
@@ -21,8 +21,8 @@ const HomePage = () => {
           <ItemGrid>
             {recentItems.map(item => (
               <ItemCard key={item.id} to={`/items/${item.id}`}>
-                <ItemImage src={item.image || undefined}>
-                  {!item.image && '이미지 없음'}
+                <ItemImage src={item.imageUrl || undefined}> {/* image -> imageUrl로 변경 권장 */}
+                  {!item.imageUrl && '이미지 없음'}
                 </ItemImage>
                 <ItemInfo>
                   <ItemTitle>{item.title}</ItemTitle>

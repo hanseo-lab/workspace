@@ -1,20 +1,30 @@
-import { useState, useMemo } from 'react';
-import { useItems } from '../context/ItemContext';
-import{Container, Controls, EmptyState, Header, ItemCard, ItemGrid, ItemImage, ItemInfo, ItemMeta, ItemPrice, ItemTitle, SearchInput, Select, Title} from'../styles/ItemList.styled';
+import { useState, useMemo, useEffect } from 'react'; // useEffect 추가
+import useItemStore from '../store/itemStore'; // Store import
+import { Container, Controls, EmptyState, Header, ItemCard, ItemGrid, ItemImage, ItemInfo, ItemMeta, ItemPrice, ItemTitle, SearchInput, Select, Title } from '../styles/ItemList.styled';
 
 const ItemListPage = () => {
-  const { items } = useItems();
+  // Zustand에서 items 데이터와 fetch 함수 가져오기
+  const { items, fetchItems } = useItemStore();
+  
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('latest');
 
+  // 컴포넌트 마운트 시 백엔드에서 데이터 로딩
+  useEffect(() => {
+    fetchItems();
+  }, [fetchItems]);
+
   const filteredAndSortedItems = useMemo(() => {
+    // items가 아직 로딩 안됐을 수 있으므로 안전장치
+    if (!items) return [];
+
     let result = [...items];
 
     // 검색 필터
     if (searchTerm) {
       result = result.filter(item =>
         item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.description.toLowerCase().includes(searchTerm.toLowerCase())
+        (item.content && item.content.toLowerCase().includes(searchTerm.toLowerCase())) // description -> content로 변경 고려
       );
     }
 
@@ -68,14 +78,14 @@ const ItemListPage = () => {
         <ItemGrid>
           {filteredAndSortedItems.map(item => (
             <ItemCard key={item.id} to={`/items/${item.id}`}>
-              <ItemImage src={item.image || undefined}>
-                {!item.image && '이미지 없음'}
+              <ItemImage src={item.imageUrl || undefined}> {/* image -> imageUrl */}
+                {!item.imageUrl && '이미지 없음'}
               </ItemImage>
               <ItemInfo>
                 <ItemTitle>{item.title}</ItemTitle>
                 <ItemPrice>{item.price.toLocaleString()}원</ItemPrice>
                 <ItemMeta>
-                  <span>{item.author}</span>
+                  <span>{item.seller}</span> {/* author -> seller */}
                   <span>{new Date(item.createdAt).toLocaleDateString()}</span>
                 </ItemMeta>
               </ItemInfo>

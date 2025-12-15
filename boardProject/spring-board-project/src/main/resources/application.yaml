@@ -4,7 +4,7 @@ spring:
 
   datasource:
     hikari:
-      jdbc-url: jdbc:h2:tcp://localhost/C:\workspace\boardProject\db
+      jdbc-url: jdbc:h2:file:C:/workspace/boardProject/db;AUTO_SERVER=TRUE
       driver-class-name: org.h2.Driver
       username: sa
       password: 1234

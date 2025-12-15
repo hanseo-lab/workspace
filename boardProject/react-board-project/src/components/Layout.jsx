@@ -1,9 +1,11 @@
 import { Outlet, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import useAuthStore from '../store/authStore'; // Context 대신 Store import
 import { Button, Header, LayoutContainer, Logo, Main, Nav, NavLink, NavLinks, UserInfo } from '../styles/Layout.styled';
 
 const Layout = () => {
-  const { user, logout, isAuthenticated } = useAuth();
+  // Zustand State 가져오기
+  const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.logout);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -19,11 +21,11 @@ const Layout = () => {
           <NavLinks>
             <NavLink to="/">홈</NavLink>
             <NavLink to="/items">물품 목록</NavLink>
-            {isAuthenticated && <NavLink to="/items/new">물품 등록</NavLink>}
+            {user && <NavLink to="/items/new">물품 등록</NavLink>}
             
-            {isAuthenticated ? (
+            {user ? (
               <>
-                <UserInfo>{user?.name}님</UserInfo>
+                <UserInfo>{user.name}님</UserInfo>
                 <NavLink to="/mypage">마이페이지</NavLink>
                 <Button onClick={handleLogout} $variant="secondary">로그아웃</Button>
               </>

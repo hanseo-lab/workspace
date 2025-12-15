@@ -1,87 +1,63 @@
 import { create } from 'zustand';
+import axios from 'axios';
 
+const API_URL = '/api/products'
 const useItemStore = create((set, get) => ({
-  items: JSON.parse(localStorage.getItem('items')) || [],
+  items: [],
   
-  addItem: (item) => {
-    const newItem = {
-      ...item,
-      id: Date.now().toString(),
-      createdAt: new Date().toISOString(),
-      comments: []
-    };
-    
-    const items = [...get().items, newItem];
-    localStorage.setItem('items', JSON.stringify(items));
-    set({ items });
-    return newItem;
+  // 전체 조회 (초기 로딩용)
+  fetchItems: async () => {
+    try {
+      const response = await axios.get(API_URL);
+      set({ items: response.data });
+    } catch (error) {
+      console.error('상품 목록 불러오기 실패:', error);
+    }
+  },
+
+  // 상세 조회
+  getItemById: async (id) => {
+    // 1. 스토어에 있으면 그거 반환, 없으면 서버 요청 (선택 사항)
+    try {
+        const response = await axios.get(`${API_URL}/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error('상품 조회 실패', error);
+    }
   },
   
-  updateItem: (id, updatedData) => {
-    const items = get().items.map(item => 
-      item.id === id ? { ...item, ...updatedData } : item
-    );
-    localStorage.setItem('items', JSON.stringify(items));
-    set({ items });
+  addItem: async (itemData) => {
+    try {
+      // itemData에는 title, content(description), price, imageUrl, seller 등이 포함되어야 함
+      const response = await axios.post(API_URL, itemData);
+      set((state) => ({ items: [response.data, ...state.items] })); // 최신글 맨 앞
+      return response.data;
+    } catch (error) {
+      console.error('상품 등록 실패:', error);
+      throw error;
+    }
   },
   
-  deleteItem: (id) => {
-    const items = get().items.filter(item => item.id !== id);
-    localStorage.setItem('items', JSON.stringify(items));
-    set({ items });
+  updateItem: async (id, updatedData) => {
+    try {
+      const response = await axios.put(`${API_URL}/${id}`, updatedData);
+      set((state) => ({
+        items: state.items.map(item => item.id === id ? response.data : item)
+      }));
+    } catch (error) {
+      console.error('수정 실패:', error);
+    }
   },
   
-  getItemById: (id) => {
-    return get().items.find(item => item.id === id);
-  },
-  
-  addComment: (itemId, comment) => {
-    const items = get().items.map(item => {
-      if (item.id === itemId) {
-        const newComment = {
-          ...comment,
-          id: Date.now().toString(),
-          createdAt: new Date().toISOString()
-        };
-        return {
-          ...item,
-          comments: [...(item.comments || []), newComment]
-        };
-      }
-      return item;
-    });
-    localStorage.setItem('items', JSON.stringify(items));
-    set({ items });
-  },
-  
-  updateComment: (itemId, commentId, content) => {
-    const items = get().items.map(item => {
-      if (item.id === itemId) {
-        return {
-          ...item,
-          comments: item.comments.map(comment =>
-            comment.id === commentId ? { ...comment, content } : comment
-          )
-        };
-      }
-      return item;
-    });
-    localStorage.setItem('items', JSON.stringify(items));
-    set({ items });
-  },
-  
-  deleteComment: (itemId, commentId) => {
-    const items = get().items.map(item => {
-      if (item.id === itemId) {
-        return {
-          ...item,
-          comments: item.comments.filter(comment => comment.id !== commentId)
-        };
-      }
-      return item;
-    });
-    localStorage.setItem('items', JSON.stringify(items));
-    set({ items });
+  deleteItem: async (id) => {
+    try {
+      await axios.delete(`${API_URL}/${id}`);
+      set((state) => ({
+        items: state.items.filter(item => item.id !== id)
+      }));
+    } catch (error) {
+      console.error('삭제 실패:', error);
+    }
   }
 }));
 
