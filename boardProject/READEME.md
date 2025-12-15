@@ -66,8 +66,22 @@
     └── services/           # Axios 설정
 ```
 
-🚀 설치 및 실행이 프로젝트는 백엔드와 프론트엔드 서버를 각각 실행해야 합니다.
-1. Backend 실행 (Spring Boot)
+## 📊 DB 설계 및 상태 관리
+
+### Backend Entity (DB)
+* **Member:** 사용자 정보 (이메일, 이름, 비밀번호, 주소)
+* **Product:** 상품 정보 (제목, 내용, 가격, 이미지, 카테고리, 상태, 조회수)
+* **Reply:** 댓글 (상품-사용자 연관)
+* **Wishlist:** 찜 (상품-사용자 연관)
+
+### Frontend Store (Zustand)
+* **authStore:** 로그인 유저 정보 관리
+* **itemStore:** 상품 목록 조회 및 필터링 관리
+
+<br/>
+## 🚀 설치 및 실행이 프로젝트는 백엔드와 프론트엔드 서버를 각각 실행해야 합니다.
+### 1. Backend 실행 (Spring Boot)
+```text
 cd spring-board-project
 
 # Windows
@@ -75,26 +89,17 @@ gradlew bootRun
 
 # Mac/Linux
 ./gradlew bootRun
-
+```
 서버 주소: http://localhost:8080
 H2 콘솔: http://localhost:8080/h2-console2.
 
-Frontend 실행 (React)
-# 프로젝트 루트(src 폴더가 있는 곳)에서 실행
+### Frontend 실행 (React)
+```text
+프로젝트 루트(src 폴더가 있는 곳)에서 실행
 npm install
 npm run dev
+```
 브라우저 접속: http://localhost:5173
-
-📊 상태 관리 및 DB 설계
-Backend Entity (DB)
-Member: 사용자 정보 (이메일, 이름, 비밀번호, 주소)
-Product: 상품 정보 (제목, 내용, 가격, 이미지, 카테고리, 상태, 조회수)
-Reply: 댓글 (상품-사용자 연관)
-Wishlist: 찜 (상품-사용자 연관)
-
-Frontend Store (Zustand)
-authStore: 로그인 유저 정보 관리
-itemStore: 상품 목록 조회 및 필터링 관리
 
 🚧 향후 개선 사항 (To-Do)
 [ ] 페이지네이션 (Pagination): 상품 목록이 많아질 경우 페이징 처리
@@ -105,4 +110,5 @@ OAuth2 로그인: 카카오/구글 소셜 로그인 연동
 
 👨‍💻 개발자
 신한서 Full Stack Developer
+
 
