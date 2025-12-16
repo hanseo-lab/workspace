@@ -1,15 +1,15 @@
 package com.kh.jpa.entity;
 
-import com.kh.jpa.enums.commonStatus;
+import com.kh.jpa.enums.CommonEnums;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "MEMBER")
+@Table(name = "member")
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AttributeOverride(name = "createDate", column = @Column(name = "ENROLL_DATE"))
-@AttributeOverride(name = "modifiedDate", column = @Column(name = "MODIFY_DATE"))
+@NoArgsConstructor(access = AccessLevel.PROTECTED) // JPA스펙상 필수 + 외부 생성 방지
 public class Member extends BaseTimeEntity {
 
     @Id
@@ -37,13 +37,13 @@ public class Member extends BaseTimeEntity {
     @Column(length = 100)
     private String address;
 
-    @Column(length = 1)
-    @Enumerated(EnumType.STRING)
-    private commonStatus status = commonStatus.Y;
-
-    public enum Gender { M, F }
-
-    // --- 연관관계---
-    @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
+    // ==== 연관관계 맵핑 ====
+    //cascade : Member객체 상태 자체가 삭제(변경)되면 profile에도 영향을 주겠다.
+    //orphanRemoval : Member객체에서 profile의 참조값이 삭제되면 실제 DB에 반영하겠다.
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.ALL,  orphanRemoval = true)
     private Profile profile;
+
+    public enum Gender {
+        M, F
+    }
 }

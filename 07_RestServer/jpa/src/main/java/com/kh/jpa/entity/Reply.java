@@ -1,31 +1,36 @@
 package com.kh.jpa.entity;
 
-import com.kh.jpa.enums.commonStatus;
+import com.kh.jpa.enums.CommonEnums;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder @AllArgsConstructor
 @Entity
 @Table(name = "REPLY")
+@Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Reply extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long replyNo;
 
-    @Column(nullable = false, length = 400)
+    @Column(length = 400, nullable = false)
     private String replyContent;
 
+    @Column(length = 1, nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private CommonEnums.Status status = CommonEnums.Status.Y;
+
+    // === 연관관계 맵핑 ====
+    // 댓글 : 게시글 (N : 1) - 연관관계 주인
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "REF_BNO", nullable = false)
+    @JoinColumn(name = "ref_bno", nullable = false)
     private Board board;
 
+    // 댓글 : 댓글작성회원 (N : 1) - 연관관계 주인
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "REPLY_WRITER", nullable = false)
+    @JoinColumn(name = "reply_writer", nullable = false)
     private Member member;
 
-    @Column(length = 1)
-    @Enumerated(EnumType.STRING)
-    private commonStatus status = commonStatus.Y;
 }

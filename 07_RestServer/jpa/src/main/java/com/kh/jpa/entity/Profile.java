@@ -1,25 +1,30 @@
 package com.kh.jpa.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "PROFILE")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Profile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long profileId;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID", nullable = false, unique = true)
-    private Member member;
-
     @Column(length = 100)
     private String profileImage;
 
     @Column(length = 300)
     private String intro;
+
+    //==== 연관관계 맵핑 ====
+
+    //프로필 : 회원 (1 : 1) - 연관관계 주인으로 Profile을 사용, 반대로 해도 됨
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", unique = true, nullable = false)
+    private Member member;
 }

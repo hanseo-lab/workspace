@@ -1,31 +1,26 @@
 package com.kh.jpa.entity;
 
-import com.kh.jpa.enums.commonStatus;
+import com.kh.jpa.enums.CommonEnums;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-import java.util.ArrayList;
-import java.util.List;
 
+@Builder @AllArgsConstructor
+@Entity
+@Table(name = "board")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Entity
-@Table(name = "BOARD")
-public class Board extends BaseTimeEntity {
+public class Board extends BaseTimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long boardNo;
+    private Long boardId;
 
     @Column(length = 100, nullable = false)
     private String boardTitle;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "BOARD_WRITER", nullable = false)
-    private Member member;
-
-    @Lob
+    //@Lob : 대용량 텍스트 데이터(CLOB) 매핑
     @Column(nullable = false)
+    @Lob
     private String boardContent;
 
     @Column(length = 100)
@@ -34,16 +29,18 @@ public class Board extends BaseTimeEntity {
     @Column(length = 100)
     private String changeName;
 
-    @ColumnDefault("0")
-    private Integer count;
+    //@Builder.Default : 빌드패턴으로 객체생서시 count값이 없다면 기본값을 사용한다.
+    @Builder.Default
+    private Integer count = 0;
 
-    @Column(length = 1)
+    @Column(length = 1, nullable = false)
     @Enumerated(EnumType.STRING)
-    private commonStatus status = commonStatus.Y;
+    @Builder.Default
+    private CommonEnums.Status status = CommonEnums.Status.Y;
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
-    private List<Reply> replies = new ArrayList<>();
-
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
-    private List<BoardTag> boardTags = new ArrayList<>();
+    //==== 연관관계 ====
+    //게시글 : 회원 N : 1 -> 연관관계 주인
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_writer", nullable = false)
+    private Member member;
 }

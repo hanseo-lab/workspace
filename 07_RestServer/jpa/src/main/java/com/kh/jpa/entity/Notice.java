@@ -1,24 +1,31 @@
 package com.kh.jpa.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "NOTICE")
-public class Notice extends BaseTimeEntity {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Notice extends BaseTimeEntity{
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long noticeNo;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long noticeId;
 
     @Column(length = 30, nullable = false)
     private String noticeTitle;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "NOTICE_WRITER", nullable = false)
-    private Member member;
-
     @Column(length = 200, nullable = false)
     private String noticeContent;
+
+    // ==== 연관관계 ====
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "notice_writer", nullable = false)
+    private Member member;
 }

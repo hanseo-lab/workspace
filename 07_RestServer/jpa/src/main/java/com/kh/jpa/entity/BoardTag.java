@@ -3,24 +3,25 @@ package com.kh.jpa.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+@Builder
+@AllArgsConstructor
+@Entity
+@Table(name = "board")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Entity
-@Table(name = "BOARD_TAG", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"BOARD_NO", "TAG_ID"}) // DB Unique 제약 반영
-})
 public class BoardTag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "BOARD_TAG_NO")
-    private Long boardTagNo;
+    private Long boardTagId;
 
+    //==== 연관관계 ====
+    //게시글태그 : 게시글 (N : 1)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "BOARD_NO", nullable = false)
+    @JoinColumn(name = "board_no", nullable = false)
     private Board board;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "TAG_ID", nullable = false)
+    @JoinColumn(name = "tag_id", nullable = false)
     private Tag tag;
 }
