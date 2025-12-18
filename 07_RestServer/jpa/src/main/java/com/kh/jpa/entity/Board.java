@@ -4,12 +4,15 @@ import com.kh.jpa.enums.CommonEnums;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Builder @AllArgsConstructor
 @Entity
 @Table(name = "board")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Board extends BaseTimeEntity{
+public class Board extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,4 +46,47 @@ public class Board extends BaseTimeEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_writer", nullable = false)
     private Member member;
+
+    @OneToMany(mappedBy = "board", orphanRemoval = true, cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<BoardTag> boardTags = new ArrayList<>();
+
+    public void changeMember(Member member) {
+        this.member = member;
+
+        if (!member.getBoards().contains(this))
+            member.getBoards().add(this);
+    }
+
+    public void changeFile(String originName, String changeName) {
+        if (originName != null) this.originName = originName;
+        if (changeName != null) this.changeName = changeName;
+    }
+
+    public void addTag(Tag tag) {
+        BoardTag boardTag = BoardTag.builder()
+                .tag(tag)
+                .build();
+
+        boardTag.changeBoard(this);
+        this.boardTags.add(boardTag);
+    }
+
+    public void patchUpdate(String boardTitle, String boardContent, String originName, String changeName) {
+        if (boardTitle != null) this.boardTitle = boardTitle;
+        if (boardContent != null) this.boardContent = boardContent;
+        if (originName != null) this.originName = originName;
+        if (changeName != null) this.changeName = changeName;
+    }
+
+    public void updateTags(List<Tag> tags) {
+        this.boardTags.clear();
+
+        // 새로운 태그 추가 (기존 addTag 메서드 활용)
+        if (tags != null) {
+            for (Tag tag : tags) {
+                this.addTag(tag);
+            }
+        }
+    }
 }
