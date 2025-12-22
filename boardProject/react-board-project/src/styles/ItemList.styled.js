@@ -104,7 +104,10 @@ export const ItemImage = styled.div`
   width: 100%;
   height: 100%;
   background-color: #f1f5f9;
-  background-image: url(${props => props.src});
+  
+  /* [수정] 따옴표 추가로 URL 오류 방지 */
+  background-image: url("${props => props.src}");
+  
   background-size: cover;
   background-position: center;
   display: flex;

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import useItemStore from '../store/itemStore';
 import { 
   Container, FilterBar, Title, Controls, Select, SearchInput, SearchButton,
@@ -10,11 +11,24 @@ const CATEGORIES = ["전체", "디지털/가전", "가구/인테리어", "의류
 
 const ItemListPage = () => {
   const { items, fetchItems } = useItemStore();
+  const location = useLocation();
+
   const [keyword, setKeyword] = useState('');
   const [category, setCategory] = useState('전체');
 
   useEffect(() => {
-    fetchItems(keyword, category);
+    if (location.state?.reset) {
+      setKeyword('');
+      setCategory('전체');
+      fetchItems('', '전체'); 
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state, fetchItems]);
+
+  useEffect(() => {
+    if (!location.state?.reset) {
+        fetchItems(keyword, category);
+    }
   }, [category]);
 
   const handleSearch = (e) => {
@@ -22,7 +36,7 @@ const ItemListPage = () => {
     fetchItems(keyword, category);
   };
 
-  const getImageUrl = (url) => {
+  const getImage= (url) => {
     if (!url) return null;
     return url.startsWith('http') ? url : `http://localhost:8080${url}`;
   };
@@ -32,10 +46,7 @@ const ItemListPage = () => {
       <FilterBar>
         <Title>중고 매물</Title>
         <Controls>
-            <Select 
-                value={category} 
-                onChange={(e) => setCategory(e.target.value)}
-            >
+            <Select value={category} onChange={(e) => setCategory(e.target.value)}>
                 {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
             </Select>
             <form onSubmit={handleSearch} style={{display:'flex', gap:'8px'}}>
@@ -54,7 +65,7 @@ const ItemListPage = () => {
         {items.length === 0 ? <p style={{gridColumn:'1/-1', textAlign:'center', padding:'3rem'}}>등록된 물품이 없습니다.</p> : items.map((item) => (
           <ItemCard key={item.id} to={`/items/${item.id}`}>
               <ItemImageWrapper>
-                 <ItemImage src={getImageUrl(item.imageUrl)} />
+                 <ItemImage src={getImage(item.image)} />
                  {item.status !== 'FOR_SALE' && (
                      <StatusBadge>
                          {item.status === 'RESERVED' ? '예약중' : '판매완료'}

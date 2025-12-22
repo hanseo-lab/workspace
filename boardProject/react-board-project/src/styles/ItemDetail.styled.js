@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 export const Container = styled.div`
   max-width: 900px;
   margin: 0 auto;
+  padding: 2rem 1rem;
 `;
 
 export const BackButton = styled(Link)`
@@ -136,10 +137,13 @@ export const ActionButton = styled.button`
 
 export const ItemImage = styled.img`
   width: 100%;
-  max-height: 500px;
+  height: auto;
+  max-height: 600px;
   object-fit: contain;
   background-color: #f8fafc;
   display: block;
+  margin: 0 auto;
+  border-bottom: 1px solid var(--border);
 `;
 
 export const NoImage = styled.div`
@@ -150,6 +154,7 @@ export const NoImage = styled.div`
   align-items: center;
   justify-content: center;
   color: var(--text-sub);
+  font-size: 1.1rem;
 `;
 
 export const ItemContent = styled.div`
@@ -187,8 +192,6 @@ export const CommentInput = styled.input`
   &:focus {
     border-color: var(--primary);
   }
-  
-  /* [추가] 비활성화 스타일 */
   &:disabled {
     background-color: #f3f4f6;
     cursor: not-allowed;
@@ -208,8 +211,6 @@ export const CommentButton = styled.button`
   &:hover {
     background-color: var(--primary-dark);
   }
-  
-  /* [추가] 비활성화 스타일 */
   &:disabled {
     background-color: #cbd5e1;
     cursor: not-allowed;

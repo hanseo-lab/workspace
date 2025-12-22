@@ -22,6 +22,8 @@ const ItemDetailPage = () => {
   const [comments, setComments] = useState([]); 
   const [newComment, setNewComment] = useState("");
   const [isWished, setIsWished] = useState(false);
+  const [editingCommentId, setEditingCommentId] = useState(null);
+  const [editContent, setEditContent] = useState("");
 
   useEffect(() => {
     const loadItem = async () => {
@@ -57,9 +59,7 @@ const ItemDetailPage = () => {
 
   const handleCommentSubmit = async () => {
       if(!user) return alert("로그인이 필요합니다.");
-      
       if(item.status === 'SOLD_OUT') return alert("판매가 완료된 상품입니다.");
-      
       if(!newComment.trim()) return;
       try {
           await axios.post(`/api/products/${id}/comments`, {
@@ -71,14 +71,40 @@ const ItemDetailPage = () => {
       } catch (e) { alert("댓글 등록 실패"); }
   };
 
+  const startEdit = (comment) => {
+    setEditingCommentId(comment.id);
+    setEditContent(comment.content);
+  };
+
+  const handleUpdateComment = async (commentId) => {
+    try {
+        await axios.patch(`/api/products/comments/${commentId}`, {
+            memberId: user.id,
+            content: editContent
+        });
+        setEditingCommentId(null);
+        fetchComments(); 
+    } catch (e) { alert("댓글 수정 실패"); }
+  };
+
+  const handleDeleteComment = async (commentId) => {
+    if(!window.confirm("댓글을 삭제하시겠습니까?")) return;
+    try {
+        await axios.delete(`/api/products/comments/${commentId}?memberId=${user.id}`);
+        fetchComments();
+    } catch (e) { alert("댓글 삭제 실패"); }
+  };
+
   const handleStatusChange = async (e) => {
     const newStatus = e.target.value;
     try {
-        await axios.put(`/api/products/${id}`, { status: newStatus });
+        const formData = new FormData();
+        formData.append('status', newStatus);
+        await axios.patch(`/api/products/${id}`, formData);
         setItem(prev => ({ ...prev, status: newStatus }));
         alert("상태가 변경되었습니다.");
     } catch (e) {
-        alert("상태 변경 실패");
+        alert("상태 변경 실패: " + (e.response?.data?.message || "서버 오류"));
     }
   };
 
@@ -89,12 +115,14 @@ const ItemDetailPage = () => {
     }
   };
 
+  const getImage = (url) => {
+    if (!url) return null;
+    return url.startsWith('http') ? url : `http://localhost:8080${url}`;
+  };
+
   if (!item) return <Container>로딩 중...</Container>;
   
-  const isAuthor = user && (user.name === item.seller || user.email === item.seller);
-  const getImageUrl = (url) => url ? (url.startsWith('http') ? url : `http://localhost:8080${url}`) : null;
-  
-  // [추가] 판매 완료 여부 확인
+  const isAuthor = user && (user.name === item.seller || user.email === item.seller); 
   const isSoldOut = item.status === 'SOLD_OUT';
 
   return (
@@ -135,7 +163,6 @@ const ItemDetailPage = () => {
                       <option value="RESERVED">🟡 예약중</option>
                       <option value="SOLD_OUT">🔴 판매완료</option>
                   </StatusSelect>
-                  
                   <ButtonGroup>
                     <ActionButton onClick={() => navigate(`/items/edit/${id}`)}>수정</ActionButton>
                     <ActionButton $variant="danger" onClick={handleDelete}>삭제</ActionButton>
@@ -145,8 +172,8 @@ const ItemDetailPage = () => {
           </ActionSection>
         </ItemHeader>
 
-        {item.imageUrl ? (
-            <ItemImage src={getImageUrl(item.imageUrl)} alt={item.title} />
+        {item.image ? (
+            <ItemImage src={getImage(item.image)} alt={item.title} />
         ) : (
             <NoImage>이미지가 없습니다</NoImage>
         )}
@@ -160,17 +187,10 @@ const ItemDetailPage = () => {
                     type="text" 
                     value={newComment} 
                     onChange={(e)=>setNewComment(e.target.value)}
-                    placeholder={
-                        isSoldOut 
-                        ? "판매가 완료되어 댓글을 작성할 수 없습니다." 
-                        : (user ? "상품에 대해 궁금한 점을 남겨주세요." : "로그인 후 작성 가능합니다.")
-                    }
+                    placeholder={isSoldOut ? "판매 완료된 상품입니다." : (user ? "댓글을 남겨주세요." : "로그인 후 작성 가능합니다.")}
                     disabled={!user || isSoldOut}
                 />
-                <CommentButton 
-                    onClick={handleCommentSubmit}
-                    disabled={!user || isSoldOut}
-                >
+                <CommentButton onClick={handleCommentSubmit} disabled={!user || isSoldOut}>
                     등록
                 </CommentButton>
             </CommentForm>
@@ -179,15 +199,40 @@ const ItemDetailPage = () => {
                 {comments.map(c => (
                     <CommentItem key={c.id}>
                         <CommentHeader>
-                            <Writer>{c.writerName}</Writer>
-                            <DateText>{new Date(c.createdAt).toLocaleString()}</DateText>
+                            <div style={{display:'flex', gap:'8px', alignItems:'baseline'}}>
+                                <Writer>{c.writerName}</Writer>
+                                <DateText>{new Date(c.createdAt).toLocaleString()}</DateText>
+                            </div>
+                            {user && user.id === c.memberId && (
+                                <div style={{fontSize:'0.8rem', display:'flex', gap:'8px'}}>
+                                    {editingCommentId === c.id ? (
+                                        <>
+                                            <span style={{cursor:'pointer', color:'blue'}} onClick={() => handleUpdateComment(c.id)}>저장</span>
+                                            <span style={{cursor:'pointer', color:'gray'}} onClick={() => setEditingCommentId(null)}>취소</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <span style={{cursor:'pointer'}} onClick={() => startEdit(c)}>수정</span>
+                                            <span style={{cursor:'pointer', color:'red'}} onClick={() => handleDeleteComment(c.id)}>삭제</span>
+                                        </>
+                                    )}
+                                </div>
+                            )}
                         </CommentHeader>
-                        <div>{c.content}</div>
+                        
+                        {editingCommentId === c.id ? (
+                            <CommentInput 
+                                value={editContent} 
+                                onChange={(e) => setEditContent(e.target.value)}
+                                autoFocus
+                            />
+                        ) : (
+                            <div>{c.content}</div>
+                        )}
                     </CommentItem>
                 ))}
             </CommentList>
         </CommentSection>
-
       </ItemContainer>
     </Container>
   );
