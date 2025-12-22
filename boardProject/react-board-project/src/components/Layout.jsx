@@ -11,7 +11,7 @@ const Layout = () => {
         <HeaderContent>
           <Logo to="/">중고마켓</Logo>
           <Nav>
-            <NavLink to="/items">매물보기</NavLink>
+            <NavLink to="/items">물건보기</NavLink>
             {user ? (
               <>
                 <NavLink to="/items/new">판매하기</NavLink>

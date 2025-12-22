@@ -31,7 +31,7 @@ const HomePage = () => {
       </Banner>
 
       <Section>
-        <SectionTitle>지금 가장 인기있는 매물 🔥</SectionTitle>
+        <SectionTitle>지금 가장 인기있는 물건 🔥</SectionTitle>
         {popularItems.length === 0 ? (
           <p style={{color: 'var(--text-sub)'}}>등록된 물품이 없습니다.</p>
         ) : (
