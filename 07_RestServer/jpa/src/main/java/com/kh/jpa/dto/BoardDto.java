@@ -1,7 +1,9 @@
 package com.kh.jpa.dto;
 
 import com.kh.jpa.entity.Board;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -26,16 +28,6 @@ public class BoardDto {
         }
     }
 
-    @Getter  @Setter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class Update{
-        private String board_title;
-        private String board_content;
-        private MultipartFile file;
-        private List<String> tags;
-    }
-
     @Getter
     @AllArgsConstructor
     @Builder
@@ -49,13 +41,12 @@ public class BoardDto {
         private String user_id;
         private String user_name;
         private LocalDateTime create_date;
-        private LocalDateTime modify_Date;
         private List<String> tags;
 
         public static Response of(Long boardId, String boardTitle, String boardContent,
                                   String originName, String changeName, Integer count,
                                   String userId, String userName,
-                                  LocalDateTime createDate, LocalDateTime modifyDate, List<String> tags){
+                                  LocalDateTime createDate, List<String> tags){
             return Response.builder()
                     .board_id(boardId)
                     .board_title(boardTitle)
@@ -66,7 +57,6 @@ public class BoardDto {
                     .user_id(userId)
                     .user_name(userName)
                     .create_date(createDate)
-                    .modify_Date(modifyDate)
                     .tags(tags)
                     .build();
         }
@@ -83,5 +73,14 @@ public class BoardDto {
                     .create_date(createDate)
                     .build();
         }
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class Update{
+        private String board_title;
+        private String board_content;
+        private MultipartFile file;
+        private List<String> tags;
     }
 }

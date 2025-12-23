@@ -245,3 +245,36 @@ export const Writer = styled.span`
 export const DateText = styled.span`
   color: var(--text-sub);
 `;
+
+export const WriterWrapper = styled.div`
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+`;
+
+export const CommentActions = styled.div`
+  font-size: 0.8rem;
+  display: flex;
+  gap: 8px;
+`;
+
+export const ActionText = styled.span`
+  cursor: pointer;
+  color: #555;
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+export const SaveText = styled(ActionText)`
+  color: blue;
+  font-weight: bold;
+`;
+
+export const CancelText = styled(ActionText)`
+  color: gray;
+`;
+
+export const DeleteText = styled(ActionText)`
+  color: red;
+`;

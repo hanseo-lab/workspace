@@ -12,7 +12,7 @@ import java.util.List;
 @Table(name = "board")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Board extends BaseTimeEntity {
+public class Board extends BaseTimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,46 +47,42 @@ public class Board extends BaseTimeEntity {
     @JoinColumn(name = "board_writer", nullable = false)
     private Member member;
 
-    @OneToMany(mappedBy = "board", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "board",orphanRemoval = true,cascade = CascadeType.ALL)
     @Builder.Default
-    private List<BoardTag> boardTags = new ArrayList<>();
+    private List<BoardTag> boardTags =  new ArrayList<>();
 
     public void changeMember(Member member) {
         this.member = member;
 
-        if (!member.getBoards().contains(this))
+        if(!member.getBoards().contains(this))
             member.getBoards().add(this);
     }
 
     public void changeFile(String originName, String changeName) {
-        if (originName != null) this.originName = originName;
-        if (changeName != null) this.changeName = changeName;
+        if(originName != null) this.originName = originName;
+        if(changeName != null) this.changeName = changeName;
     }
 
-    public void addTag(Tag tag) {
+    public void update(String title, String content, String originName, String changeName) {
+        this.changeFile(originName, changeName);
+        if(title != null) this.boardTitle = title;
+        if(content != null) this.boardContent = content;
+    }
+
+//    public void changeTitle(String title){
+//        if(title != null) this.boardTitle = title;
+//    }
+//
+//    public void changeContent(String content){
+//        if(content != null) this.boardContent = content;
+//    }
+
+    public void addTag(Tag tag){
         BoardTag boardTag = BoardTag.builder()
                 .tag(tag)
                 .build();
 
         boardTag.changeBoard(this);
         this.boardTags.add(boardTag);
-    }
-
-    public void patchUpdate(String boardTitle, String boardContent, String originName, String changeName) {
-        if (boardTitle != null) this.boardTitle = boardTitle;
-        if (boardContent != null) this.boardContent = boardContent;
-        if (originName != null) this.originName = originName;
-        if (changeName != null) this.changeName = changeName;
-    }
-
-    public void updateTags(List<Tag> tags) {
-        this.boardTags.clear();
-
-        // 새로운 태그 추가 (기존 addTag 메서드 활용)
-        if (tags != null) {
-            for (Tag tag : tags) {
-                this.addTag(tag);
-            }
-        }
     }
 }

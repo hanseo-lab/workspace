@@ -9,7 +9,9 @@ import {
   ActionSection, LikeButton, StatusSelect, ButtonGroup, ActionButton,
   ItemImage, NoImage, ItemContent, CommentSection, CommentTitle,
   CommentForm, CommentInput, CommentButton, CommentList, CommentItem,
-  CommentHeader, Writer, DateText
+  CommentHeader, Writer, DateText,
+  // [추가된 스타일 컴포넌트]
+  WriterWrapper, CommentActions, ActionText, SaveText, CancelText, DeleteText
 } from '../styles/ItemDetail.styled';
 
 const ItemDetailPage = () => {
@@ -199,24 +201,25 @@ const ItemDetailPage = () => {
                 {comments.map(c => (
                     <CommentItem key={c.id}>
                         <CommentHeader>
-                            <div style={{display:'flex', gap:'8px', alignItems:'baseline'}}>
+                            <WriterWrapper>
                                 <Writer>{c.writerName}</Writer>
                                 <DateText>{new Date(c.createdAt).toLocaleString()}</DateText>
-                            </div>
+                            </WriterWrapper>
+                            
                             {user && user.id === c.memberId && (
-                                <div style={{fontSize:'0.8rem', display:'flex', gap:'8px'}}>
+                                <CommentActions>
                                     {editingCommentId === c.id ? (
                                         <>
-                                            <span style={{cursor:'pointer', color:'blue'}} onClick={() => handleUpdateComment(c.id)}>저장</span>
-                                            <span style={{cursor:'pointer', color:'gray'}} onClick={() => setEditingCommentId(null)}>취소</span>
+                                            <SaveText onClick={() => handleUpdateComment(c.id)}>저장</SaveText>
+                                            <CancelText onClick={() => setEditingCommentId(null)}>취소</CancelText>
                                         </>
                                     ) : (
                                         <>
-                                            <span style={{cursor:'pointer'}} onClick={() => startEdit(c)}>수정</span>
-                                            <span style={{cursor:'pointer', color:'red'}} onClick={() => handleDeleteComment(c.id)}>삭제</span>
+                                            <ActionText onClick={() => startEdit(c)}>수정</ActionText>
+                                            <DeleteText onClick={() => handleDeleteComment(c.id)}>삭제</DeleteText>
                                         </>
                                     )}
-                                </div>
+                                </CommentActions>
                             )}
                         </CommentHeader>
                         

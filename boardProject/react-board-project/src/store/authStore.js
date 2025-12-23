@@ -22,7 +22,7 @@ const useAuthStore = create((set) => ({
   
   signup: async (userData) => { // email, password, name
     try {
-      const response = await axios.post(`${API_URL}/signup`, userData);
+      const response = await axios.post(`${API_URL}`, userData);
       return response.data;
     } catch (error) {
       throw new Error('회원가입 실패: 이미 존재하는 이메일일 수 있습니다.');
